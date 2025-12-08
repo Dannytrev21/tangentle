@@ -1,0 +1,279 @@
+{
+  "taskPatterns": {
+    "commonBlockers": [],
+    "energyPatterns": [],
+    "procrastinationTriggers": []
+  },
+  "strategies": [
+    {
+      "id": "2-minute-version",
+      "name": "2-Minute Version",
+      "description": "Do just 2 minutes of the task to build momentum. Set a timer and commit to stopping after 2 minutes if you want.",
+      "applicableTo": ["too_big", "scary", "boring"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["first-step-only", "break-it-down"]
+    },
+    {
+      "id": "first-step-only",
+      "name": "First Step Only",
+      "description": "Identify and do ONLY the very first physical action. Don't think about step 2.",
+      "applicableTo": ["too_big", "overwhelmed"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["break-it-down", "body-doubling"]
+    },
+    {
+      "id": "break-it-down",
+      "name": "Break It Down Further",
+      "description": "The task is still too big. Break it into even smaller 5-10 minute chunks.",
+      "applicableTo": ["too_big", "overwhelmed"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["get-help"]
+    },
+    {
+      "id": "clarify-done",
+      "name": "Define 'Done' First",
+      "description": "Before starting, write down exactly what 'done' looks like. What's the specific deliverable?",
+      "applicableTo": ["unclear", "scary"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["get-help", "permission-to-suck"]
+    },
+    {
+      "id": "body-doubling",
+      "name": "Body Doubling",
+      "description": "Work alongside someone (in person, video call, or even a focus stream). Their presence helps maintain focus.",
+      "applicableTo": ["boring", "distracted"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["accountability-partner", "change-environment"]
+    },
+    {
+      "id": "reward-after",
+      "name": "Reward After",
+      "description": "Set up a specific reward you'll get after completing the task. Make it something you actually want.",
+      "applicableTo": ["boring", "low_energy"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["gamify-it", "body-doubling"]
+    },
+    {
+      "id": "permission-to-suck",
+      "name": "Permission to Suck",
+      "description": "Give yourself explicit permission to do it badly. A bad first draft is better than no draft.",
+      "applicableTo": ["scary", "unclear"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["get-help", "lower-stakes"]
+    },
+    {
+      "id": "brain-dump-first",
+      "name": "Brain Dump First",
+      "description": "Before the task, dump everything on your mind into a list. Clear the mental clutter.",
+      "applicableTo": ["distracted", "overwhelmed"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["ruthless-triage", "phone-away"]
+    },
+    {
+      "id": "phone-away",
+      "name": "Phone in Another Room",
+      "description": "Physically put your phone in another room. Out of sight, out of mind.",
+      "applicableTo": ["distracted"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["screen-time-lock", "focus-app"]
+    },
+    {
+      "id": "screen-time-lock",
+      "name": "Screen Time Lock",
+      "description": "Use Screen Time (iOS) or Digital Wellbeing (Android) to block distracting apps during work hours.",
+      "applicableTo": ["distracted"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["focus-app", "accountability-partner"]
+    },
+    {
+      "id": "focus-app",
+      "name": "Use Focus App",
+      "description": "Use a focus app like Forest, Freedom, or Cold Turkey to block distractions completely.",
+      "applicableTo": ["distracted"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["change-environment", "accountability-partner"]
+    },
+    {
+      "id": "basic-needs-check",
+      "name": "Basic Needs Check",
+      "description": "Check: Have you eaten? Hydrated? Slept? Sometimes the problem is physical, not mental.",
+      "applicableTo": ["low_energy", "distracted"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["take-a-break", "match-energy"]
+    },
+    {
+      "id": "take-a-break",
+      "name": "Take a Real Break",
+      "description": "Step away completely for 15-20 minutes. Walk, stretch, get outside. Don't look at screens.",
+      "applicableTo": ["low_energy", "overwhelmed"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["reschedule-tomorrow", "match-energy"]
+    },
+    {
+      "id": "match-energy",
+      "name": "Match Task to Energy",
+      "description": "Do high-focus tasks when you have energy (morning). Save low-energy tasks for afternoons.",
+      "applicableTo": ["low_energy"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["reschedule-tomorrow", "swap-task"]
+    },
+    {
+      "id": "ruthless-triage",
+      "name": "Ruthless Triage",
+      "description": "Cross off or defer anything that isn't truly essential. You can only do one thing at a time.",
+      "applicableTo": ["overwhelmed"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["delegate-it", "reschedule-tomorrow"]
+    },
+    {
+      "id": "unblock-it",
+      "name": "Identify the Actual Block",
+      "description": "Ask: What SPECIFICALLY am I waiting on? Can I work around it? Can I ask for help right now?",
+      "applicableTo": ["blocked", "waiting"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["get-help", "work-around"]
+    },
+    {
+      "id": "pomodoro",
+      "name": "Pomodoro Technique",
+      "description": "Work for 25 minutes, then take a 5 minute break. Use a timer.",
+      "applicableTo": ["too_big", "boring", "distracted"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["shorter-pomodoro", "body-doubling"]
+    },
+    {
+      "id": "shorter-pomodoro",
+      "name": "Shorter Pomodoro (10 min)",
+      "description": "25 minutes too long? Try 10 minutes of work, then a 3 minute break.",
+      "applicableTo": ["too_big", "boring", "distracted"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["2-minute-version", "body-doubling"]
+    },
+    {
+      "id": "change-environment",
+      "name": "Change Environment",
+      "description": "Move to a different location - coffee shop, different room, outside. New environment = new focus.",
+      "applicableTo": ["distracted", "boring", "low_energy"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["body-doubling", "accountability-partner"]
+    },
+    {
+      "id": "get-help",
+      "name": "Ask for Help",
+      "description": "Reach out to someone who can help - a coworker, friend, or expert. You don't have to do it alone.",
+      "applicableTo": ["blocked", "unclear", "too_big", "scary"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["delegate-it", "reschedule-tomorrow"]
+    },
+    {
+      "id": "accountability-partner",
+      "name": "Accountability Partner",
+      "description": "Tell someone your goal and deadline. Check in with them when done.",
+      "applicableTo": ["distracted", "boring", "scary"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["body-doubling", "stake-something"]
+    },
+    {
+      "id": "lower-stakes",
+      "name": "Lower the Stakes",
+      "description": "Remind yourself: This doesn't have to be perfect. What's the minimum viable version?",
+      "applicableTo": ["scary", "unclear"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": ["permission-to-suck", "get-help"]
+    },
+    {
+      "id": "reschedule-tomorrow",
+      "name": "Reschedule to Tomorrow",
+      "description": "Sometimes today isn't the day. Move it to tomorrow's peak energy time.",
+      "applicableTo": ["low_energy", "overwhelmed"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": []
+    },
+    {
+      "id": "swap-task",
+      "name": "Swap for Different Task",
+      "description": "Can't do this task right now? Swap it for a different task that matches your current energy.",
+      "applicableTo": ["low_energy", "bored"],
+      "score": 0,
+      "outcomes": [],
+      "tweaks": [],
+      "escalations": []
+    }
+  ],
+  "taskHistory": {},
+  "reviewSessions": [],
+  "eveningReviews": [
+    {
+      "date": "2025-12-04",
+      "incompleteTasks": [
+        {
+          "title": "Finish policy bot documentation",
+          "project": "💻 Work"
+        },
+        {
+          "title": "Get metrics for policy bot",
+          "project": "💻 Work"
+        },
+        {
+          "title": "Send policy bot stuff to Jim",
+          "project": "💻 Work"
+        }
+      ],
+      "incompleteCount": 3
+    }
+  ],
+  "insights": [],
+  "preferences": {
+    "peakFocusTime": "9am-12pm",
+    "lowEnergyTime": "2pm-5pm",
+    "taskSizePreference": "15-30 minutes",
+    "medicationSchedule": "Vyvanse at 6:00am"
+  },
+  "lastUpdated": "2025-12-04T02:11:17.913Z"
+}

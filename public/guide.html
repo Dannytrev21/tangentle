@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide - Executive Brain</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Guide-specific styles */
+        .guide-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+            overflow-y: auto;
+            height: calc(100vh - 80px);
+        }
+
+        .guide-hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-input) 100%);
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+        }
+
+        .guide-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .guide-hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .toc {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .toc h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem 1.5rem;
+        }
+
+        .toc a {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: var(--transition-base);
+        }
+
+        .toc a:hover {
+            color: var(--accent-hover);
+            padding-left: 0.5rem;
+        }
+
+        .guide-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .guide-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--accent-bg);
+        }
+
+        .guide-section h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .guide-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .guide-section ul, .guide-section ol {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .guide-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .command-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .command-card .command-name {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .command-card .command-desc {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .command-card .command-example {
+            background: var(--bg-hover);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+        }
+
+        .flow-diagram {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+            color: var(--text-primary);
+        }
+
+        .avoidance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .avoidance-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            transition: var(--transition-base);
+        }
+
+        .avoidance-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .avoidance-card .avoidance-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .avoidance-card .avoidance-strategies {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: var(--accent-bg);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .guide-footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-light);
+            margin-top: 2rem;
+        }
+
+        .guide-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .guide-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .guide-hero {
+                padding: 2rem 1rem;
+            }
+
+            .guide-hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .guide-section {
+                padding: 1.5rem;
+            }
+
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .avoidance-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-diagram {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar will be injected by SharedNavigation -->
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header Bar -->
+            <header class="content-header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="header-title">
+                    <h1>User Guide</h1>
+                    <p class="header-subtitle">Learn how Executive Brain works</p>
+                </div>
+            </header>
+
+            <!-- Guide Content -->
+            <div class="guide-content">
+                <!-- Hero Section -->
+                <div class="guide-hero">
+                    <h1>Executive Brain Guide</h1>
+                    <p>Your ADHD-friendly task management assistant</p>
+                </div>
+
+                <!-- Table of Contents -->
+                <nav class="toc">
+                    <h3>Quick Navigation</h3>
+                    <div class="toc-grid">
+                        <a href="#what-is-this">What is Executive Brain?</a>
+                        <a href="#how-it-works">How It Works</a>
+                        <a href="#commands">Commands Reference</a>
+                        <a href="#focus-mode">Focus Mode</a>
+                        <a href="#avoidance-types">Avoidance Types</a>
+                        <a href="#strategy-tracking">Strategy Tracking</a>
+                        <a href="#daily-routines">Daily Routines</a>
+                        <a href="#tips">ADHD Tips</a>
+                        <a href="#schedule">Visual Schedule</a>
+                        <a href="#technical">Technical Setup</a>
+                    </div>
+                </nav>
+
+                <!-- What is Executive Brain -->
+                <section id="what-is-this" class="guide-section">
+                    <h2>What is Executive Brain?</h2>
+                    <p>
+                        Executive Brain is your external executive function assistant. It's designed specifically for people with ADHD who struggle with:
+                    </p>
+                    <ul>
+                        <li><strong>Task initiation</strong> - Starting tasks feels impossible</li>
+                        <li><strong>Prioritization</strong> - Everything feels equally urgent (or equally unimportant)</li>
+                        <li><strong>Time blindness</strong> - Tasks take longer than you think</li>
+                        <li><strong>Overwhelm</strong> - Too many things competing for attention</li>
+                        <li><strong>Productive procrastination</strong> - Doing other "productive" things to avoid the real task</li>
+                    </ul>
+                    <p>
+                        The app connects to your TickTick task list and provides intelligent, ADHD-aware coaching to help you actually get things done.
+                    </p>
+
+                    <div class="highlight-box">
+                        <p><strong>Core Philosophy:</strong> Break everything down, reduce friction, and never shame. We problem-solve together.</p>
+                    </div>
+                </section>
+
+                <!-- How It Works -->
+                <section id="how-it-works" class="guide-section">
+                    <h2>How It Works</h2>
+                    <p>Executive Brain has three layers:</p>
+
+                    <h3>1. TickTick Integration</h3>
+                    <p>
+                        The app pulls your real tasks from TickTick, including priorities, due dates, and project organization. It knows what you <em>should</em> be doing based on your task list.
+                    </p>
+
+                    <h3>2. Focus Coaching</h3>
+                    <p>
+                        When you ask "What should I be doing?", the app doesn't just show you a list. It:
+                    </p>
+                    <ul>
+                        <li>Identifies your #1 priority</li>
+                        <li>Asks what you're <em>actually</em> doing</li>
+                        <li>Helps you understand why you're avoiding (if you are)</li>
+                        <li>Provides targeted strategies based on your specific blocker</li>
+                        <li>Breaks tasks down until they're small enough to start</li>
+                    </ul>
+
+                    <h3>3. ADHD-Aware Strategies</h3>
+                    <p>
+                        Every response is designed for the ADHD brain:
+                    </p>
+                    <ul>
+                        <li>Short, scannable messages</li>
+                        <li>Clear next actions</li>
+                        <li>No shame or judgment</li>
+                        <li>Escape hatches when you're stuck</li>
+                        <li>Celebration of small wins</li>
+                    </ul>
+                </section>
+
+                <!-- Commands Reference -->
+                <section id="commands" class="guide-section">
+                    <h2>Commands Reference</h2>
+
+                    <div class="command-card">
+                        <div class="command-name">/now</div>
+                        <div class="command-desc">
+                            The main command. Starts focus coaching by showing your #1 priority and asking what you're doing.
+                        </div>
+                        <div class="command-example">Also works: "What should I be doing?" or "What now?"</div>
+                    </div>
+
+                    <div class="command-card">
+                        <div class="command-name">/add</div>
+                        <div class="command-desc">
+                            Add a task with intelligent capture. Tell me what you need to do and I'll help break it down, pick the right project, and optionally help you get started.
+                        </div>
+                        <div class="command-example">Examples: "/add finish the report" or just "I need to call the dentist"</div>
+                    </div>
+
+                    <div class="command-card">
+                        <div class="command-name">/checkin</div>
+                        <div class="command-desc">
+                            Check in on your progress during a focus session. Reports how long you've been working and asks how it's going.
+                        </div>
+                        <div class="command-example">Use this when you want accountability or need to refocus.</div>
+                    </div>
+
+                    <div class="command-card">
+                        <div class="command-name">/morning</div>
+                        <div class="command-desc">
+                            Start your morning planning routine. Reviews today's tasks, checks overdue items, and helps set your top 3 priorities.
+                        </div>
+                        <div class="command-example">Best used first thing in the morning before diving into work.</div>
+                    </div>
+
+                    <div class="command-card">
+                        <div class="command-name">/evening</div>
+                        <div class="command-desc">
+                            Evening review routine. Celebrates wins, reviews what didn't get done (without judgment), and plans tomorrow.
+                        </div>
+                        <div class="command-example">Helps you close out the day and avoid carrying mental load overnight.</div>
+                    </div>
+
+                    <div class="command-card">
+                        <div class="command-name">/intake</div>
+                        <div class="command-desc">
+                            Brain dump mode. Get everything out of your head first, then organize it into tasks.
+                        </div>
+                        <div class="command-example">Great for when your head is full and you can't focus.</div>
+                    </div>
+
+                    <div class="command-card">
+                        <div class="command-name">/stuck</div>
+                        <div class="command-desc">
+                            When you're paralyzed and don't know where to start. Helps find the very next tiny action.
+                        </div>
+                        <div class="command-example">"What's the next physical action?" - just one step.</div>
+                    </div>
+                </section>
+
+                <!-- Focus Mode -->
+                <section id="focus-mode" class="guide-section">
+                    <h2>Focus Mode (The Core Feature)</h2>
+                    <p>
+                        Focus Mode is the heart of Executive Brain. Here's how the flow works:
+                    </p>
+
+                    <div class="flow-diagram">
+┌─────────────────────────────────────────────┐
+│  "What should I be doing?"                  │
+└─────────────────┬───────────────────────────┘
+                  ▼
+┌─────────────────────────────────────────────┐
+│  Show #1 priority from TickTick             │
+│  Ask: "What are you actually doing?"        │
+└─────────────────┬───────────────────────────┘
+                  ▼
+        ┌─────────┴─────────┐
+        ▼                   ▼
+┌───────────────┐   ┌───────────────────────┐
+│ Working on it │   │ Doing something else  │
+│ Great! ✓      │   │ or avoiding           │
+└───────────────┘   └───────────┬───────────┘
+                                ▼
+                ┌───────────────────────────┐
+                │ "What's making it hard?"  │
+                │ Pick avoidance type:      │
+                │ 1-8 options               │
+                └───────────┬───────────────┘
+                            ▼
+                ┌───────────────────────────┐
+                │ Targeted strategies       │
+                │ based on YOUR blocker     │
+                └───────────┬───────────────┘
+                            ▼
+                ┌───────────────────────────┐
+                │ Break down to first step  │
+                │ Set time box (10 min)     │
+                │ Go do it!                 │
+                └───────────┬───────────────┘
+                            ▼
+                ┌───────────────────────────┐
+                │ Check in on progress      │
+                │ Adjust if needed          │
+                └───────────────────────────┘</div>
+
+                    <div class="highlight-box">
+                        <p><strong>Key insight:</strong> The goal isn't to shame you into working. It's to understand <em>why</em> starting feels hard and give you specific tools to overcome that specific barrier.</p>
+                    </div>
+                </section>
+
+                <!-- Avoidance Types -->
+                <section id="avoidance-types" class="guide-section">
+                    <h2>Avoidance Types & Strategies</h2>
+                    <p>
+                        When you're avoiding a task, there's always a reason. Executive Brain helps you identify which type of avoidance you're experiencing and provides targeted strategies:
+                    </p>
+
+                    <div class="avoidance-grid">
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">1. Too Big</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> 2-minute version, first step only, Swiss cheese method, break it down further
+                            </div>
+                        </div>
+
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">2. Unclear</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> Clarify first, draft mode, rubber duck it, define what "done" looks like
+                            </div>
+                        </div>
+
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">3. Boring</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> Body doubling, gamify it, pair with podcast/music, set a reward
+                            </div>
+                        </div>
+
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">4. Scary</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> Permission to suck, lower the stakes, separate thinking from doing
+                            </div>
+                        </div>
+
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">5. Blocked</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> Unblock it now, work around the blocker, escalate, mark as waiting
+                            </div>
+                        </div>
+
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">6. Distracted</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> Brain dump first, phone away, close all tabs, body doubling
+                            </div>
+                        </div>
+
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">7. Low Energy</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> Basic needs check, match task to energy, 5-min movement, reschedule
+                            </div>
+                        </div>
+
+                        <div class="avoidance-card">
+                            <div class="avoidance-name">8. Overwhelmed</div>
+                            <div class="avoidance-strategies">
+                                <strong>Strategies:</strong> Pick ONE thing, brain dump everything, ruthless triage, breathe first
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Strategy Tracking -->
+                <section id="strategy-tracking" class="guide-section">
+                    <h2>Strategy Tracking (Learning What Works)</h2>
+                    <p>
+                        Executive Brain doesn't just suggest strategies - it <strong>learns which ones work for you</strong>. Every strategy has a score based on your personal outcomes.
+                    </p>
+
+                    <h3>How Scoring Works</h3>
+                    <ul>
+                        <li><strong>Success (+3 points)</strong> - Strategy worked, you got unstuck and did the task</li>
+                        <li><strong>Partial (+1 point)</strong> - Strategy helped a bit but didn't fully work</li>
+                        <li><strong>Failure (-1 point)</strong> - Strategy didn't help this time</li>
+                    </ul>
+
+                    <h3>Personalized Suggestions</h3>
+                    <p>
+                        When you're avoiding a task, you'll see strategies sorted by what's worked best for you:
+                    </p>
+                    <div class="command-card">
+                        <div class="command-name">Example suggestion based on scores:</div>
+                        <div class="command-example">Based on what's worked for you before:
+
+1. 2-Minute Version (score: +8) - Your go-to
+2. First Step Only (score: +5) - Works well for "too big"
+3. Permission to Suck (score: +2) - Still building data
+
+Which one do you want to try?</div>
+                    </div>
+
+                    <h3>Recording Outcomes</h3>
+                    <p>
+                        Outcomes are recorded automatically when:
+                    </p>
+                    <ul>
+                        <li>You try a strategy during avoidance coaching</li>
+                        <li>A focus session ends</li>
+                        <li>You mention what helped during evening review</li>
+                    </ul>
+
+                    <h3>Tweaking Strategies</h3>
+                    <p>
+                        When you discover something that makes a strategy work better, it gets saved as a "tweak":
+                    </p>
+                    <ul>
+                        <li>"2-minute version works better with a physical timer"</li>
+                        <li>"Body doubling is more effective with video calls than co-working spaces"</li>
+                        <li>"Permission to suck helps most when I say it out loud"</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <p><strong>The Goal:</strong> Over time, Executive Brain learns YOUR brain. What works for one person with ADHD might not work for another - this system adapts to you.</p>
+                    </div>
+                </section>
+
+                <!-- Daily Routines -->
+                <section id="daily-routines" class="guide-section">
+                    <h2>Daily Routines</h2>
+
+                    <h3>Morning Planning</h3>
+                    <p>Start each day with intention:</p>
+                    <ol>
+                        <li>Review what's scheduled for today</li>
+                        <li>Check overdue tasks - what slipped and why?</li>
+                        <li>Identify your top 3 priorities (not 10, just 3)</li>
+                        <li>Time block your peak focus hours (typically 9am-12pm)</li>
+                        <li>Leave buffer time - you will underestimate</li>
+                    </ol>
+
+                    <h3>Evening Review</h3>
+                    <p>Close out the day properly:</p>
+                    <ol>
+                        <li>What got done? Celebrate wins!</li>
+                        <li>What didn't get done? (No judgment)</li>
+                        <li>Why didn't it get done? (Learn from it)</li>
+                        <li>Set tomorrow's top 3</li>
+                        <li>Brain dump anything still on your mind</li>
+                    </ol>
+
+                    <div class="highlight-box">
+                        <p><strong>Energy Pattern:</strong> Your peak focus window is typically mid-morning to noon when medication is most effective. Schedule demanding tasks here. Save routine/admin tasks for afternoon when energy dips.</p>
+                    </div>
+                </section>
+
+                <!-- Tips -->
+                <section id="tips" class="guide-section">
+                    <h2>ADHD Tips & Best Practices</h2>
+
+                    <h3>Task Sizing</h3>
+                    <ul>
+                        <li>Tasks should be 15-30 minutes maximum</li>
+                        <li>If a task feels big, break it down until it doesn't</li>
+                        <li>The first step should be so small you can't say no</li>
+                    </ul>
+
+                    <h3>Time Estimation</h3>
+                    <ul>
+                        <li>You will underestimate. Always add 50% buffer.</li>
+                        <li>"5 minutes" usually means 15 minutes</li>
+                        <li>"30 minutes" usually means 45-60 minutes</li>
+                    </ul>
+
+                    <h3>When Stuck</h3>
+                    <ul>
+                        <li>Ask: "What's the next <em>physical</em> action?"</li>
+                        <li>Try the 2-minute version</li>
+                        <li>Body doubling helps - work alongside someone</li>
+                        <li>Sometimes you need to step away (5-min walk)</li>
+                    </ul>
+
+                    <h3>Avoiding Shame Spirals</h3>
+                    <ul>
+                        <li>You're not lazy - you have ADHD</li>
+                        <li>Missing a task isn't failure - it's data</li>
+                        <li>Productive procrastination is still avoidance</li>
+                        <li>Small wins count - celebrate them</li>
+                    </ul>
+                </section>
+
+                <!-- Visual Schedule -->
+                <section id="schedule" class="guide-section">
+                    <h2>Visual Schedule</h2>
+                    <p>
+                        The Visual Schedule page helps you see your day at a glance, designed specifically for time blindness and ADHD prioritization challenges.
+                    </p>
+
+                    <h3>Accessing the Schedule</h3>
+                    <p>Click "Schedule" in the sidebar or navigate to the Schedule page.</p>
+
+                    <h3>NOW Section</h3>
+                    <p>
+                        The prominent "Right Now" section shows your current priority task. It includes quick actions:
+                    </p>
+                    <ul>
+                        <li><strong>Done</strong> - Mark the task complete</li>
+                        <li><strong>I'm Stuck</strong> - Jump to stuck coaching</li>
+                        <li><strong>Skip</strong> - Move to the next task</li>
+                        <li><strong>Break</strong> - Take a deliberate break</li>
+                    </ul>
+
+                    <h3>Energy Zones</h3>
+                    <p>
+                        Your day is organized into energy zones that match your natural focus patterns:
+                    </p>
+                    <ul>
+                        <li><strong>Peak Focus (9am-12pm)</strong> - Deep work, demanding cognitive tasks</li>
+                        <li><strong>Recharge (12pm-2pm)</strong> - Lunch, breaks, reset time</li>
+                        <li><strong>Admin Time (2pm-5pm)</strong> - Emails, meetings, routine tasks</li>
+                        <li><strong>Wind Down (5pm-6pm)</strong> - Wrap up, planning for tomorrow</li>
+                    </ul>
+
+                    <h3>Ideal Day Editor</h3>
+                    <p>
+                        Click "Edit Ideal Day" to customize your energy zones. The schedule will automatically place tasks in optimal time slots based on your patterns.
+                    </p>
+
+                    <div class="highlight-box">
+                        <p><strong>ADHD Tip:</strong> The schedule syncs with TickTick automatically. High-priority tasks go in your Peak Focus window, routine tasks in Admin Time.</p>
+                    </div>
+                </section>
+
+                <!-- Technical Setup -->
+                <section id="technical" class="guide-section">
+                    <h2>Technical Setup</h2>
+
+                    <h3>Quick Start - macOS Apps (Easiest)</h3>
+                    <p>Double-clickable apps are installed in your Applications folder:</p>
+                    <div class="command-card">
+                        <div class="command-name">Executive Brain.app</div>
+                        <div class="command-example">Double-click to start all services and open the web UI automatically.
+Located at: /Applications/Executive Brain.app</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="command-name">Stop Executive Brain.app</div>
+                        <div class="command-example">Double-click to stop all services.
+Located at: /Applications/Stop Executive Brain.app</div>
+                    </div>
+                    <p><strong>Tip:</strong> Drag these apps to your Dock for quick access!</p>
+
+                    <h3>Quick Start - Terminal</h3>
+                    <div class="command-card">
+                        <div class="command-name">Start All Services</div>
+                        <div class="command-example">npm start</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="command-name">Stop All Services</div>
+                        <div class="command-example">npm stop</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="command-name">Check Status</div>
+                        <div class="command-example">npm run status</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="command-name">View Logs</div>
+                        <div class="command-example">npm run logs          # All logs
+npm run logs:server   # Server logs only
+npm run logs:processor # Processor logs only</div>
+                    </div>
+                    <p>Then open <code>http://localhost:3001</code> in your browser.</p>
+
+                    <h3>Auto-Start on Login (Optional)</h3>
+                    <p>You can configure Executive Brain to start automatically when you log in:</p>
+                    <div class="command-card">
+                        <div class="command-name">Enable Auto-Start</div>
+                        <div class="command-example">./macos/install-autostart.sh</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="command-name">Disable Auto-Start</div>
+                        <div class="command-example">./macos/uninstall-autostart.sh</div>
+                    </div>
+                    <p>This installs a macOS Launch Agent that runs Executive Brain on login.</p>
+
+                    <h3>Rebuilding macOS Apps</h3>
+                    <p>If you need to rebuild the macOS apps (after code changes):</p>
+                    <div class="command-card">
+                        <div class="command-name">Build Apps</div>
+                        <div class="command-example">./macos/build-app.sh</div>
+                    </div>
+
+                    <h3>System Architecture</h3>
+                    <div class="flow-diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                     WebUI (Browser)                          │
+│                           │                                  │
+│              ┌────────────┴────────────┐                    │
+│              │   WebSocket Connection  │                    │
+│              │   + Polling Fallback    │                    │
+│              └────────────┬────────────┘                    │
+└───────────────────────────┼─────────────────────────────────┘
+                            │
+┌───────────────────────────┼─────────────────────────────────┐
+│          Server (src/server.js - port 3001)                  │
+│  ┌──────────────────┬─────┴─────┬──────────────────┐        │
+│  │   Express API    │ WebSocket │   File Watcher   │        │
+│  └──────────────────┴───────────┴──────────────────┘        │
+│              │                           ▲                   │
+│              ▼                           │                   │
+│  .command-queue.json          .command-responses.json       │
+└──────────────┬───────────────────────────┴──────────────────┘
+               │                           ▲
+               ▼                           │
+┌──────────────────────────────────────────┴──────────────────┐
+│              Processor (src/processor.js)                    │
+│  1. Watches .command-queue.json                              │
+│  2. Processes commands using TickTick MCP                    │
+│  3. Writes responses to .command-responses.json              │
+│  → Server detects → WebSocket broadcasts → UI updates        │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 PM2 Process Manager                          │
+│  • Auto-restarts crashed processes                           │
+│  • Centralized logging in logs/ directory                    │
+│  • Status monitoring via `npm run status`                    │
+└─────────────────────────────────────────────────────────────┘</div>
+
+                    <h3>How Commands Are Processed</h3>
+                    <ol>
+                        <li><strong>WebUI</strong> sends command to server via HTTP POST</li>
+                        <li><strong>Server</strong> adds to <code>.command-queue.json</code>, returns commandId immediately</li>
+                        <li><strong>Processor</strong> detects queue change, processes command</li>
+                        <li><strong>Processor</strong> fetches data from TickTick via MCP</li>
+                        <li><strong>Processor</strong> writes response to <code>.command-responses.json</code></li>
+                        <li><strong>Server</strong> detects response, broadcasts via WebSocket</li>
+                        <li><strong>WebUI</strong> receives WebSocket message (or polling fallback), displays response</li>
+                    </ol>
+
+                    <h3>Memory System</h3>
+                    <p>
+                        Executive Brain remembers context between sessions in <code>memories.json</code>:
+                    </p>
+                    <ul>
+                        <li><strong>preferences</strong> - Your peak focus time, task size preference</li>
+                        <li><strong>taskPatterns</strong> - Common blockers, energy patterns, procrastination triggers</li>
+                        <li><strong>strategies</strong> - ADHD coping strategies with scores and outcomes</li>
+                        <li><strong>eveningReviews</strong> - Historical data from evening reviews</li>
+                    </ul>
+
+                    <h3>Files Structure</h3>
+                    <p><strong>Frontend (public/):</strong></p>
+                    <ul>
+                        <li><code>public/index.html</code> - Main chat interface</li>
+                        <li><code>public/schedule.html</code> - Visual schedule with energy zones</li>
+                        <li><code>public/projects.html</code> - Project management</li>
+                        <li><code>public/guide.html</code> - This guide page</li>
+                        <li><code>public/app.js</code> - Frontend logic with WebSocket + polling</li>
+                        <li><code>public/styles.css</code> - Shared styling</li>
+                        <li><code>public/shared/nav.js</code> - Shared navigation component</li>
+                    </ul>
+                    <p><strong>Backend (src/):</strong></p>
+                    <ul>
+                        <li><code>src/server.js</code> - Express + WebSocket server</li>
+                        <li><code>src/processor.js</code> - Watches queue, processes commands</li>
+                        <li><code>ecosystem.config.js</code> - PM2 process configuration</li>
+                    </ul>
+                    <p><strong>macOS Integration (macos/):</strong></p>
+                    <ul>
+                        <li><code>macos/brain-launcher.sh</code> - Shell wrapper (loads nvm, starts services)</li>
+                        <li><code>macos/ExecutiveBrain.applescript</code> - Start app source</li>
+                        <li><code>macos/StopExecutiveBrain.applescript</code> - Stop app source</li>
+                        <li><code>macos/build-app.sh</code> - Builds .app bundles</li>
+                        <li><code>macos/install-autostart.sh</code> - Enable launch agent</li>
+                        <li><code>macos/uninstall-autostart.sh</code> - Disable launch agent</li>
+                    </ul>
+                    <p><strong>Data Files:</strong></p>
+                    <ul>
+                        <li><code>.command-queue.json</code> - Pending commands from WebUI</li>
+                        <li><code>.command-responses.json</code> - Responses for WebUI</li>
+                        <li><code>data/memories.json</code> - User patterns, strategies, and context</li>
+                        <li><code>data/projects/</code> - Project markdown files</li>
+                        <li><code>logs/</code> - PM2 log files</li>
+                    </ul>
+
+                    <h3>Debugging</h3>
+                    <div class="command-card">
+                        <div class="command-name">Check service status</div>
+                        <div class="command-example">npm run status                          # PM2 process status
+curl http://localhost:3001/api/health   # Server health check</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="command-name">View logs</div>
+                        <div class="command-example">npm run logs                            # All PM2 logs
+npm run logs:server                     # Server logs only
+npm run logs:processor                  # Processor logs only
+# Or directly:
+tail -f logs/server.log logs/processor.log</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="command-name">Restart after code changes</div>
+                        <div class="command-example">npm run restart                         # Restart all services</div>
+                    </div>
+
+                    <h3>TickTick Projects</h3>
+                    <p>Your tasks are organized into these projects:</p>
+                    <ul>
+                        <li><strong>Work</strong> - Professional tasks (Agile/Kanban formatted)</li>
+                        <li><strong>Health</strong> - Medical, fitness</li>
+                        <li><strong>Finances</strong> - Money management</li>
+                        <li><strong>Relationships</strong> - Social tasks</li>
+                        <li><strong>Hobbies & Leisure</strong> - Fun stuff</li>
+                        <li><strong>Maintenance</strong> - Home/car upkeep</li>
+                        <li><strong>Someday-Maybe</strong> - Ideas for later</li>
+                        <li><strong>Forging</strong> - Self-improvement, skill building</li>
+                    </ul>
+                </section>
+
+                <!-- Footer -->
+                <footer class="guide-footer">
+                    <p>Executive Brain - Built with care for the ADHD mind</p>
+                    <p><a href="index.html">Back to Chat</a></p>
+                </footer>
+            </div>
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </div>
+
+    <!-- Load shared navigation -->
+    <script src="shared/nav.js"></script>
+    <script>
+        // Initialize shared navigation
+        const nav = new SharedNavigation('guide');
+    </script>
+</body>
+</html>

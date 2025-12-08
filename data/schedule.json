@@ -1,0 +1,37 @@
+{
+  "recurringEvents": [
+    {
+      "name": "Standup",
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "startTime": "09:45",
+      "endTime": "10:15",
+      "type": "meeting",
+      "notes": "Daily team standup"
+    },
+    {
+      "name": "Peak Focus Window",
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "type": "focus-block",
+      "notes": "Best time for deep work - Vyvanse most effective"
+    },
+    {
+      "name": "Low Energy Period",
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "startTime": "14:00",
+      "endTime": "17:00",
+      "type": "low-energy",
+      "notes": "Better for routine tasks, meetings, admin work"
+    },
+    {
+      "name": "Morning Routine",
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+      "startTime": "05:50",
+      "endTime": "06:30",
+      "type": "routine",
+      "notes": "Vyvanse, water, workout clothes, light therapy, plan day"
+    }
+  ],
+  "oneTimeEvents": []
+}

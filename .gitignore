@@ -11,3 +11,29 @@
 
 # Logs
 *.log
+
+# Node
+node_modules/
+
+# Test coverage
+coverage/
+
+# Transient data files (runtime state)
+.command-queue.json
+.command-responses.json
+.review-session.json
+.focus-sessions.json
+.pending-commands.json
+.projects-index.json
+.claude-requests.json
+.claude-responses.json
+
+# PID files
+*.pid
+
+# Legacy archived code (keep in repo but could exclude)
+# legacy/
+
+# PM2 logs
+logs/
+*.log

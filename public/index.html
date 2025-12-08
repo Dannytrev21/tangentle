@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Brain - ADHD Task Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout" id="appLayout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🧠</span>
+                    <span class="logo-text">Executive Brain</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="chat">
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Chat</span>
+                </a>
+                <a href="schedule.html" class="nav-item" data-page="schedule">
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Schedule</span>
+                </a>
+                <a href="projects.html" class="nav-item" data-page="projects">
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Projects</span>
+                </a>
+                <a href="guide.html" class="nav-item" data-page="guide">
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Guide</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item theme-toggle" id="themeToggle">
+                    <span class="nav-icon">
+                        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Light Mode</span>
+                </button>
+                <div class="status-indicator" id="processorStatus">
+                    <span class="status-dot"></span>
+                    <span class="nav-label">Connecting...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header Bar -->
+            <header class="content-header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="header-title">
+                    <h1>What's on your mind?</h1>
+                    <p class="header-subtitle">I'm here to help you focus</p>
+                </div>
+                <div class="header-actions">
+                    <button class="focus-mode-btn" id="focusModeBtn" aria-label="Toggle focus mode" title="Enter Focus Mode">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Current Task Widget (hidden by default) -->
+            <div class="current-task-widget" id="currentTaskWidget" style="display: none;">
+                <div class="current-task-header">
+                    <span class="current-task-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Currently Working On
+                    </span>
+                    <span class="current-task-timer" id="currentTaskTimer">0:00</span>
+                </div>
+                <div class="current-task-content">
+                    <span class="current-task-title" id="currentTaskTitle">No task selected</span>
+                    <span class="current-task-project" id="currentTaskProject"></span>
+                </div>
+                <div class="current-task-actions">
+                    <button class="task-action-btn task-action-done" id="taskDoneBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Done
+                    </button>
+                    <button class="task-action-btn task-action-stuck" id="taskStuckBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        Stuck
+                    </button>
+                    <button class="task-action-btn task-action-break" id="taskBreakBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                            <line x1="12" y1="2" x2="12" y2="12"></line>
+                        </svg>
+                        Break
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions" id="quickActions">
+                <button class="action-btn action-primary" data-command="/now">
+                    <span class="action-icon">🎯</span>
+                    <span class="action-text">What Now?</span>
+                </button>
+                <button class="action-btn action-success" data-command="/add">
+                    <span class="action-icon">➕</span>
+                    <span class="action-text">Add Task</span>
+                </button>
+                <button class="action-btn" data-command="/stuck">
+                    <span class="action-icon">🚦</span>
+                    <span class="action-text">I'm Stuck</span>
+                </button>
+                <button class="action-btn" data-command="/checkin">
+                    <span class="action-icon">⏰</span>
+                    <span class="action-text">Check In</span>
+                </button>
+                <button class="action-btn action-hide-mobile" data-command="/morning">
+                    <span class="action-icon">☀️</span>
+                    <span class="action-text">Morning</span>
+                </button>
+                <button class="action-btn action-hide-mobile" data-command="/evening">
+                    <span class="action-icon">🌙</span>
+                    <span class="action-text">Evening</span>
+                </button>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container">
+                <div class="messages-area" id="messagesArea">
+                    <!-- Welcome Message -->
+                    <div class="message assistant-message welcome-message">
+                        <div class="message-avatar">🧠</div>
+                        <div class="message-bubble">
+                            <p class="greeting">Hey Danny! I'm your Executive Brain.</p>
+                            <p><strong>What can I help with?</strong></p>
+                            <ul>
+                                <li><strong>What Now?</strong> - Focus coaching with your priorities</li>
+                                <li><strong>Add Task</strong> - Capture tasks with smart breakdown</li>
+                                <li><strong>I'm Stuck</strong> - Get unstuck with personalized strategies</li>
+                            </ul>
+                            <p class="hint-text">Or just type what's on your mind - a task, a question, whatever you need.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-wrapper">
+                        <input
+                            type="text"
+                            class="chat-input"
+                            id="commandInput"
+                            placeholder="Type a command or tell me what you need..."
+                            autocomplete="off"
+                        >
+                        <button class="send-btn" id="sendBtn" aria-label="Send">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-hint">
+                        Press <kbd>Enter</kbd> to send
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </div>
+
+    <!-- Focus Mode Exit Button (shown only in focus mode) -->
+    <button class="focus-exit-btn" id="focusExitBtn" style="display: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        Exit Focus Mode
+    </button>
+
+    <script src="app.js"></script>
+</body>
+</html>

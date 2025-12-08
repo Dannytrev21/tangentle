@@ -1,0 +1,420 @@
+openapi: 3.1.0
+info:
+  title: TickTick Open API
+  version: v1
+  description: Official API for accessing and managing TickTick tasks, projects, and lists.
+servers:
+  - url: https://api.ticktick.com
+    description: Main Production Server
+security:
+  - bearerAuth: []
+
+paths:
+  # ----------------------------------------------------------------------------
+  # TASK ENDPOINTS
+  # ----------------------------------------------------------------------------
+  /open/v1/project/{projectId}/task/{taskId}:
+    get:
+      summary: Get Task By Project ID And Task ID
+      operationId: getTask
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task or Project not found
+
+    delete:
+      summary: Delete Task
+      operationId: deleteTask
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task deleted successfully
+
+  /open/v1/task:
+    post:
+      summary: Create Task
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, projectId]
+              properties:
+                title:
+                  type: string
+                projectId:
+                  type: string
+                content:
+                  type: string
+                desc:
+                  type: string
+                isAllDay:
+                  type: boolean
+                startDate:
+                  type: string
+                  format: date-time
+                dueDate:
+                  type: string
+                  format: date-time
+                priority:
+                  type: integer
+                  description: "0: None, 1: Low, 3: Medium, 5: High"
+                reminders:
+                  type: array
+                  items:
+                    type: string
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ChecklistItem'
+      responses:
+        '200':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /open/v1/task/{taskId}:
+    post:
+      summary: Update Task
+      description: Updates an existing task. Note that this API uses POST for updates.
+      operationId: updateTask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Task updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /open/v1/project/{projectId}/task/{taskId}/complete:
+    post:
+      summary: Complete Task
+      operationId: completeTask
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task completed
+
+  # ----------------------------------------------------------------------------
+  # PROJECT ENDPOINTS
+  # ----------------------------------------------------------------------------
+  /open/v1/project:
+    get:
+      summary: Get User Projects
+      operationId: getProjects
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Create Project
+      operationId: createProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                color:
+                  type: string
+                viewMode:
+                  type: string
+                  enum: [list, kanban, timeline]
+                kind:
+                  type: string
+                  enum: [TASK, NOTE]
+      responses:
+        '200':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /open/v1/project/{projectId}:
+    get:
+      summary: Get Project By ID
+      operationId: getProjectById
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    post:
+      summary: Update Project
+      operationId: updateProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    delete:
+      summary: Delete Project
+      operationId: deleteProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project deleted
+
+  /open/v1/project/{projectId}/data:
+    get:
+      summary: Get Project With Data (Tasks and Columns)
+      operationId: getProjectData
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project data including tasks and columns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectData'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ---------------------------------------------------------
+    # Schema: ChecklistItem (Subtask)
+    # ---------------------------------------------------------
+    ChecklistItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subtask identifier
+        title:
+          type: string
+          description: Subtask title
+        status:
+          type: integer
+          description: "0: Normal, 1: Completed"
+        completedTime:
+          type: string
+          format: date-time
+        isAllDay:
+          type: boolean
+        sortOrder:
+          type: integer
+          format: int64
+        startDate:
+          type: string
+          format: date-time
+        timeZone:
+          type: string
+
+    # ---------------------------------------------------------
+    # Schema: Task
+    # ---------------------------------------------------------
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Task identifier
+        projectId:
+          type: string
+          description: ID of the parent project
+        title:
+          type: string
+          description: Task title
+        isAllDay:
+          type: boolean
+        completedTime:
+          type: string
+          format: date-time
+        content:
+          type: string
+          description: Task detailed content
+        desc:
+          type: string
+          description: Description of checklist
+        dueDate:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecklistItem'
+        priority:
+          type: integer
+          description: "0: None, 1: Low, 3: Medium, 5: High"
+        reminders:
+          type: array
+          items:
+            type: string
+          example: ["TRIGGER:P0DT9H0M0S"]
+        repeatFlag:
+          type: string
+          description: RRULE for recurring tasks
+        sortOrder:
+          type: integer
+          format: int64
+        startDate:
+          type: string
+          format: date-time
+        status:
+          type: integer
+          description: "0: Normal, 2: Completed"
+        timeZone:
+          type: string
+        kind:
+          type: string
+          enum: ["TEXT", "NOTE", "CHECKLIST"]
+
+    # ---------------------------------------------------------
+    # Schema: Project
+    # ---------------------------------------------------------
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        color:
+          type: string
+        sortOrder:
+          type: integer
+          format: int64
+        closed:
+          type: boolean
+        groupId:
+          type: string
+        viewMode:
+          type: string
+          enum: [list, kanban, timeline]
+        permission:
+          type: string
+          enum: [read, write, comment]
+        kind:
+          type: string
+          enum: [TASK, NOTE]
+
+    # ---------------------------------------------------------
+    # Schema: Column
+    # ---------------------------------------------------------
+    Column:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        name:
+          type: string
+        sortOrder:
+          type: integer
+          format: int64
+
+    # ---------------------------------------------------------
+    # Schema: ProjectData
+    # ---------------------------------------------------------
+    ProjectData:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/Project'
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Column'

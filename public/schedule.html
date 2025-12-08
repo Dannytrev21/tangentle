@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule - Executive Brain</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .schedule-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+            overflow-y: auto;
+            height: calc(100vh - 80px);
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .schedule-header h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .current-time {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* NOW Section */
+        .now-section {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .now-section.shutdown {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .now-section.break {
+            background: linear-gradient(135deg, var(--success), #34d399);
+        }
+
+        .now-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .now-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .now-time-elapsed {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .now-task {
+            background: rgba(255,255,255,0.15);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .now-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .now-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .now-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .now-btn.primary {
+            background: white;
+            color: var(--accent);
+        }
+
+        .now-btn.primary:hover {
+            background: rgba(255,255,255,0.9);
+        }
+
+        /* NOW Timer Visualization */
+        .now-content {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .now-timer {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        .timer-ring {
+            transform: rotate(-90deg);
+            width: 120px;
+            height: 120px;
+        }
+
+        .timer-ring-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.2);
+            stroke-width: 8;
+        }
+
+        .timer-ring-progress {
+            fill: none;
+            stroke: white;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 1s ease, stroke 0.5s ease;
+        }
+
+        .timer-ring-progress.phase-starting {
+            stroke: #60a5fa;
+        }
+
+        .timer-ring-progress.phase-focused {
+            stroke: #34d399;
+        }
+
+        .timer-ring-progress.phase-finishing {
+            stroke: #fbbf24;
+        }
+
+        .timer-ring-progress.phase-overtime {
+            stroke: #f87171;
+            animation: pulse-ring 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .timer-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+
+        .timer-elapsed {
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.2;
+        }
+
+        .timer-total {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .now-details {
+            flex: 1;
+        }
+
+        .now-phase {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            margin-bottom: 0.5rem;
+        }
+
+        .now-phase.phase-starting { background: rgba(96, 165, 250, 0.3); }
+        .now-phase.phase-focused { background: rgba(52, 211, 153, 0.3); }
+        .now-phase.phase-finishing { background: rgba(251, 191, 36, 0.3); }
+        .now-phase.phase-overtime {
+            background: rgba(248, 113, 113, 0.4);
+            animation: pulse-phase 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-phase {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .now-task-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .now-task-meta {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Schedule Section */
+        .schedule-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .schedule-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .schedule-title h2 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .schedule-date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Day Sections */
+        .day-section {
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .day-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-time {
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.7;
+            text-transform: none;
+        }
+
+        .section-routine { color: #f59e0b; }
+        .section-focus { color: var(--accent); }
+        .section-break { color: var(--success); }
+        .section-admin { color: #6366f1; }
+        .section-personal { color: #8b5cf6; }
+        .section-shutdown { color: var(--text-muted); }
+
+        /* Time Blocks */
+        .time-block {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 0.15rem;
+            min-height: 1.8rem;
+        }
+
+        .time-label {
+            width: 65px;
+            flex-shrink: 0;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            padding-top: 0.25rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .block-content {
+            flex: 1;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 0.25rem 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .block-content:hover {
+            background: var(--bg-hover);
+        }
+
+        .block-content.task {
+            border-left-color: var(--accent);
+            background: var(--accent-bg);
+        }
+
+        .block-content.routine {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .block-content.event {
+            border-left-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .block-content.current {
+            border-left-color: var(--success);
+            background: var(--success-bg);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+        }
+
+        .block-content.buffer {
+            border-left-color: var(--border-light);
+            opacity: 0.7;
+        }
+
+        .block-content.shutdown {
+            border-left-color: var(--text-muted);
+            background: rgba(100, 116, 139, 0.1);
+            opacity: 0.6;
+        }
+
+        .task-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .task-checkbox:hover {
+            transform: scale(1.1);
+        }
+
+        .continuation-marker {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            width: 16px;
+            flex-shrink: 0;
+        }
+
+        .fixed-indicator {
+            font-size: 0.65rem;
+            opacity: 0.6;
+            margin-left: auto;
+        }
+
+        .time-block.past .block-content {
+            opacity: 0.5;
+        }
+
+        .block-title {
+            flex: 1;
+            color: var(--text-primary);
+        }
+
+        .block-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 0.15rem 0.4rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .current-indicator {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--success);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .block-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: var(--success);
+            border-radius: 0 0 0 var(--radius-sm);
+            transition: width 0.3s ease;
+        }
+
+        /* Overflow warning */
+        .overflow-warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            margin: 1rem 1.5rem;
+            color: var(--error);
+            font-size: 0.85rem;
+        }
+
+        /* Actions Bar */
+        .schedule-actions {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-input);
+            border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+
+        .action-btn.primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Stats Summary */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-light);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        /* Loading State */
+        .loading-schedule {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .loading-schedule .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 0.25rem;
+        }
+
+        .view-toggle button {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .view-toggle button.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Week View */
+        .week-view {
+            display: none;
+        }
+
+        .week-view.active {
+            display: block;
+        }
+
+        .day-view.active {
+            display: block;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .week-day {
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            min-height: 150px;
+        }
+
+        .week-day-header {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .week-day.today {
+            border: 2px solid var(--accent);
+        }
+
+        .week-task {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--accent-bg);
+            border-left: 2px solid var(--accent);
+            margin-bottom: 0.25rem;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 768px) {
+            .schedule-container {
+                padding: 0.5rem;
+            }
+
+            .now-section {
+                padding: 1rem;
+            }
+
+            .now-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .now-timer {
+                width: 100px;
+                height: 100px;
+            }
+
+            .timer-ring {
+                width: 100px;
+                height: 100px;
+            }
+
+            .timer-elapsed {
+                font-size: 1.2rem;
+            }
+
+            .now-task-title {
+                font-size: 1.1rem;
+            }
+
+            .time-label {
+                width: 50px;
+                font-size: 0.65rem;
+            }
+
+            .block-content {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .time-block {
+                min-height: 1.5rem;
+            }
+
+            .week-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar injected by nav.js -->
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header Bar -->
+            <header class="content-header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="header-title">
+                    <h1>Your Schedule</h1>
+                    <p class="header-subtitle" id="scheduleDate">Loading...</p>
+                </div>
+                <div class="header-actions">
+                    <span class="current-time" id="currentTime">--:-- --</span>
+                </div>
+            </header>
+
+            <div class="schedule-container">
+                <!-- NOW Section -->
+                <section class="now-section" id="nowSection">
+                    <div class="now-header">
+                        <span class="now-label">Right Now</span>
+                    </div>
+                    <div class="now-task" id="nowTask">
+                        <div class="now-content">
+                            <div class="now-timer" id="nowTimer">
+                                <svg class="timer-ring" viewBox="0 0 120 120">
+                                    <circle class="timer-ring-bg" cx="60" cy="60" r="50"/>
+                                    <circle class="timer-ring-progress" id="timerProgress" cx="60" cy="60" r="50"/>
+                                </svg>
+                                <div class="timer-center">
+                                    <div class="timer-elapsed" id="timerElapsed">0:00</div>
+                                    <div class="timer-total" id="timerTotal">of 30 min</div>
+                                </div>
+                            </div>
+                            <div class="now-details">
+                                <div class="now-phase" id="nowPhase">Starting</div>
+                                <div class="now-task-title" id="nowTaskTitle">Loading...</div>
+                                <div class="now-task-meta" id="nowTaskMeta"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="now-actions" id="nowActions">
+                        <button class="now-btn primary" onclick="markDone()">Done</button>
+                        <button class="now-btn" onclick="imStuck()">I'm Stuck</button>
+                        <button class="now-btn" onclick="skipTask()">Skip</button>
+                        <button class="now-btn" onclick="takeBreak()">Break</button>
+                    </div>
+                </section>
+
+                <!-- Schedule Section -->
+                <section class="schedule-section">
+                    <div class="schedule-title">
+                        <h2>Today's Schedule</h2>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="view-toggle">
+                                <button class="active" onclick="showDayView()">Day</button>
+                                <button onclick="showWeekView()">Week</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-bar" id="statsBar">
+                        <div class="stat-item">
+                            <span class="stat-value" id="statTasks">0</span>
+                            <span class="stat-label">tasks</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="statFocus">0h</span>
+                            <span class="stat-label">focus time</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="statRoutines">0</span>
+                            <span class="stat-label">routines</span>
+                        </div>
+                    </div>
+
+                    <!-- Day View -->
+                    <div class="day-view active" id="dayView">
+                        <div id="scheduleContent">
+                            <div class="loading-schedule">
+                                <div class="spinner"></div>
+                                <p>Loading your schedule...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week View -->
+                    <div class="week-view" id="weekView">
+                        <div class="week-grid" id="weekGrid"></div>
+                    </div>
+
+                    <div class="schedule-actions">
+                        <button class="action-btn primary" onclick="regenerateSchedule()">
+                            Refresh
+                        </button>
+                        <button class="action-btn" onclick="openNewTaskModal()">
+                            + New Task
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </div>
+
+    <script src="shared/nav.js"></script>
+    <script>
+        // Initialize shared navigation
+        const nav = new SharedNavigation('schedule');
+
+        // Configuration
+        const API_URL = 'http://localhost:3001/api';
+        const WORK_PROJECT_ID = '692cc2ab575c11180e5d9df0';
+        const ROUTINES_PROJECT_ID = '61e863eb8f08484e9018fa6e';
+
+        // Default day sections
+        const DEFAULT_SECTIONS = [
+            { name: 'Morning Routine', start: '6:00 AM', end: '8:00 AM', type: 'routine', icon: '🌅' },
+            { name: 'Peak Focus', start: '8:00 AM', end: '12:00 PM', type: 'focus', icon: '⚡' },
+            { name: 'Lunch Break', start: '12:00 PM', end: '1:00 PM', type: 'break', icon: '🍽️' },
+            { name: 'Admin Time', start: '1:00 PM', end: '5:00 PM', type: 'admin', icon: '📋' },
+            { name: 'Evening Personal', start: '5:00 PM', end: '8:30 PM', type: 'personal', icon: '🌆' },
+            { name: 'Evening Shutdown', start: '8:30 PM', end: '10:00 PM', type: 'shutdown', icon: '🌙' }
+        ];
+
+        // State
+        let currentTask = null;
+        let todaysTasks = [];
+        let routines = [];
+        let daySections = [];
+        let timerStartTime = null;
+        let currentTaskDuration = 30;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTime();
+            setInterval(updateTime, 1000);
+            loadDaySections();
+            loadSchedule();
+            updateDate();
+        });
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+            updateTimerRing();
+        }
+
+        function updateDate() {
+            const now = new Date();
+            document.getElementById('scheduleDate').textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function loadDaySections() {
+            const saved = localStorage.getItem('daySections');
+            if (saved) {
+                daySections = JSON.parse(saved);
+            } else {
+                daySections = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
+            }
+        }
+
+        // Parse time string to minutes from midnight
+        function parseTime(timeStr) {
+            const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+            if (!match) return 0;
+            let hours = parseInt(match[1]);
+            const minutes = parseInt(match[2]);
+            const ampm = match[3].toUpperCase();
+            if (ampm === 'PM' && hours !== 12) hours += 12;
+            if (ampm === 'AM' && hours === 12) hours = 0;
+            return hours * 60 + minutes;
+        }
+
+        // Format minutes to time string
+        function formatTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const h = hours % 12 || 12;
+            return `${h}:${mins.toString().padStart(2, '0')} ${ampm}`;
+        }
+
+        function getCurrentMinutes() {
+            const now = new Date();
+            return now.getHours() * 60 + now.getMinutes();
+        }
+
+        // Load schedule from TickTick
+        async function loadSchedule() {
+            try {
+                showLoadingState();
+
+                // Fetch engaged tasks
+                const engagedRes = await fetch(`${API_URL}/ticktick/ticktick_get_engaged_tasks`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const engagedData = await engagedRes.json();
+
+                if (engagedData.success && engagedData.result) {
+                    todaysTasks = engagedData.result;
+                }
+
+                generateSchedule();
+            } catch (e) {
+                console.error('Failed to load schedule:', e);
+                showEmptyState();
+            }
+        }
+
+        function showLoadingState() {
+            document.getElementById('scheduleContent').innerHTML = `
+                <div class="loading-schedule">
+                    <div class="spinner"></div>
+                    <p>Loading your schedule...</p>
+                </div>
+            `;
+        }
+
+        function showEmptyState() {
+            document.getElementById('scheduleContent').innerHTML = `
+                <div class="loading-schedule">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                    <h3 style="color: var(--text-primary);">No tasks scheduled</h3>
+                    <p>Add tasks in TickTick or use the chat to capture them.</p>
+                </div>
+            `;
+            updateNowSection(null);
+        }
+
+        // Parse task metadata
+        function parseTaskMetadata(task) {
+            const metadata = {
+                duration: 30,
+                projectId: task.projectId,
+                isWork: task.projectId === WORK_PROJECT_ID,
+                type: 'task'
+            };
+
+            if (task.content) {
+                const durationMatch = task.content.match(/duration:(\d+)/);
+                if (durationMatch) {
+                    metadata.duration = parseInt(durationMatch[1]);
+                }
+            }
+
+            return metadata;
+        }
+
+        // Calculate priority score
+        function calculatePriorityScore(task) {
+            let score = 0;
+            const now = new Date();
+
+            // Base priority from TickTick
+            score += (task.priority || 0) * 20;
+
+            // Due date scoring
+            if (task.dueDate) {
+                const dueDate = new Date(task.dueDate);
+                const daysUntilDue = (dueDate - now) / (1000 * 60 * 60 * 24);
+
+                if (daysUntilDue < 0) score += 150;
+                else if (daysUntilDue < 1) score += 100;
+                else if (daysUntilDue < 3) score += 75;
+            }
+
+            return score;
+        }
+
+        // Generate schedule
+        function generateSchedule() {
+            const currentMinutes = getCurrentMinutes();
+            const schedule = [];
+
+            // Sort sections by start time
+            const sortedSections = [...daySections].sort((a, b) =>
+                parseTime(a.start) - parseTime(b.start)
+            );
+
+            // Prepare tasks
+            const workTasks = todaysTasks
+                .filter(t => t.projectId === WORK_PROJECT_ID)
+                .map(t => ({
+                    ...t,
+                    ...parseTaskMetadata(t),
+                    priorityScore: calculatePriorityScore(t)
+                }))
+                .sort((a, b) => b.priorityScore - a.priorityScore);
+
+            const personalTasks = todaysTasks
+                .filter(t => t.projectId !== WORK_PROJECT_ID)
+                .map(t => ({
+                    ...t,
+                    ...parseTaskMetadata(t),
+                    priorityScore: calculatePriorityScore(t)
+                }))
+                .sort((a, b) => b.priorityScore - a.priorityScore);
+
+            // Create queues
+            let workQueue = [...workTasks];
+            let personalQueue = [...personalTasks];
+            let currentWorkTask = null;
+            let workTaskSlotsRemaining = 0;
+
+            // Generate slots for each section
+            for (const section of sortedSections) {
+                const sectionStart = parseTime(section.start);
+                const sectionEnd = parseTime(section.end);
+                const slots = [];
+
+                // Generate 10-minute intervals
+                for (let time = sectionStart; time < sectionEnd; time += 10) {
+                    const slotEnd = Math.min(time + 10, sectionEnd);
+                    const isCurrent = currentMinutes >= time && currentMinutes < slotEnd;
+                    const isPast = time < currentMinutes;
+
+                    let slot = {
+                        start: time,
+                        end: slotEnd,
+                        isCurrent,
+                        isPast,
+                        type: 'buffer',
+                        title: 'Available',
+                        meta: null,
+                        taskId: null,
+                        projectId: null,
+                        canComplete: false
+                    };
+
+                    if (section.type === 'shutdown') {
+                        slot.type = 'shutdown';
+                        slot.title = 'Relax - no tasks';
+                    } else if (section.type === 'break') {
+                        slot.type = 'buffer';
+                        slot.title = section.name.includes('Lunch') ? 'Lunch' : 'Break';
+                    } else if (section.type === 'focus' || section.type === 'admin') {
+                        // Work zones
+                        if (currentWorkTask && workTaskSlotsRemaining > 0) {
+                            slot.type = 'task';
+                            slot.title = currentWorkTask.title;
+                            slot.meta = currentWorkTask.projectName || 'Work';
+                            slot.priority = currentWorkTask.priority;
+                            slot.taskId = currentWorkTask.id;
+                            slot.projectId = currentWorkTask.projectId;
+                            slot.duration = currentWorkTask.duration;
+                            slot.canComplete = true;
+                            slot.isFirstSlot = false;
+                            workTaskSlotsRemaining--;
+
+                            if (workTaskSlotsRemaining === 0) {
+                                currentWorkTask = null;
+                            }
+                        } else if (workQueue.length > 0) {
+                            currentWorkTask = workQueue.shift();
+                            const slotsNeeded = Math.ceil(currentWorkTask.duration / 10);
+                            workTaskSlotsRemaining = slotsNeeded - 1;
+
+                            slot.type = 'task';
+                            slot.title = currentWorkTask.title;
+                            slot.meta = `${currentWorkTask.duration} min`;
+                            slot.priority = currentWorkTask.priority;
+                            slot.taskId = currentWorkTask.id;
+                            slot.projectId = currentWorkTask.projectId;
+                            slot.duration = currentWorkTask.duration;
+                            slot.canComplete = true;
+                            slot.isFirstSlot = true;
+
+                            if (workTaskSlotsRemaining === 0) {
+                                currentWorkTask = null;
+                            }
+                        }
+                    }
+
+                    slots.push(slot);
+                }
+
+                schedule.push({ section, slots });
+            }
+
+            renderSchedule(schedule, currentMinutes);
+            updateStats();
+        }
+
+        function renderSchedule(schedule, currentMinutes) {
+            let html = '';
+            let foundCurrentTask = null;
+
+            for (const { section, slots } of schedule) {
+                const sectionClass = `section-${section.type}`;
+
+                html += `<div class="day-section">
+                    <div class="section-header ${sectionClass}">
+                        <span class="section-name">${section.icon} ${section.name}</span>
+                        <span class="section-time">${section.start} - ${section.end}</span>
+                    </div>`;
+
+                for (const slot of slots) {
+                    const currentClass = slot.isCurrent ? 'current' : '';
+                    const pastClass = slot.isPast && slot.type !== 'task' ? 'past' : '';
+                    const typeClass = slot.type;
+                    const showCheckbox = slot.canComplete && slot.isFirstSlot;
+
+                    if (slot.isCurrent && slot.type === 'task') {
+                        foundCurrentTask = slot;
+                    } else if (slot.isCurrent && !foundCurrentTask) {
+                        foundCurrentTask = slot;
+                    }
+
+                    const priorityIndicator = slot.priority === 5 ? '🔴' :
+                                              slot.priority === 3 ? '🟡' : '';
+
+                    html += `
+                        <div class="time-block ${pastClass}">
+                            <div class="time-label">${formatTime(slot.start)}</div>
+                            <div class="block-content ${typeClass} ${currentClass}"
+                                 ${slot.taskId ? `data-task-id="${slot.taskId}"` : ''}
+                                 ${slot.projectId ? `data-project-id="${slot.projectId}"` : ''}>
+                                ${showCheckbox ? `
+                                    <input type="checkbox" class="task-checkbox"
+                                           onclick="completeTaskFromSchedule('${slot.taskId}', '${slot.projectId}')"
+                                           title="Mark complete">
+                                ` : (slot.canComplete && !slot.isFirstSlot ? '<span class="continuation-marker">↳</span>' : '')}
+                                <span class="block-title">${priorityIndicator} ${slot.title}</span>
+                                ${slot.meta ? `<span class="block-meta">${slot.meta}</span>` : ''}
+                                ${slot.isCurrent ? '<span class="current-indicator">◀ NOW</span>' : ''}
+                                ${slot.isCurrent ? `<div class="block-progress" style="width: ${getSlotProgress(slot.start)}%"></div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += '</div>';
+            }
+
+            document.getElementById('scheduleContent').innerHTML = html;
+            updateNowSection(foundCurrentTask);
+        }
+
+        function getSlotProgress(slotStart) {
+            const current = getCurrentMinutes();
+            const elapsed = current - slotStart;
+            return Math.min(100, (elapsed / 10) * 100);
+        }
+
+        function updateNowSection(currentSlot) {
+            const nowSection = document.getElementById('nowSection');
+            const nowTitle = document.getElementById('nowTaskTitle');
+            const nowMeta = document.getElementById('nowTaskMeta');
+            const nowActions = document.getElementById('nowActions');
+            const nowTimer = document.getElementById('nowTimer');
+
+            if (!currentSlot) {
+                nowSection.className = 'now-section shutdown';
+                nowTitle.textContent = 'Outside scheduled hours';
+                nowMeta.innerHTML = 'Check back during your scheduled day';
+                nowActions.style.display = 'none';
+                nowTimer.style.display = 'none';
+                document.getElementById('nowPhase').style.display = 'none';
+                currentTask = null;
+                hideTimer();
+                return;
+            }
+
+            nowActions.style.display = 'flex';
+            nowTimer.style.display = 'block';
+            document.getElementById('nowPhase').style.display = 'inline-block';
+
+            if (currentSlot.type === 'shutdown') {
+                nowSection.className = 'now-section shutdown';
+                nowTitle.textContent = 'Evening Shutdown';
+                nowMeta.innerHTML = 'Time to wind down. No tasks - relax and recharge.';
+                nowActions.style.display = 'none';
+                nowTimer.style.display = 'none';
+                document.getElementById('nowPhase').style.display = 'none';
+                currentTask = null;
+                hideTimer();
+            } else if (currentSlot.type === 'task') {
+                nowSection.className = 'now-section';
+                nowTitle.textContent = currentSlot.title;
+                nowMeta.innerHTML = `
+                    <span>📁 ${currentSlot.meta || 'Task'}</span>
+                    <span>${getPriorityLabel(currentSlot.priority)}</span>
+                `;
+                currentTask = currentSlot;
+                const duration = currentSlot.duration || 30;
+                initializeTimer(duration, currentSlot.start);
+            } else if (currentSlot.type === 'buffer') {
+                nowSection.className = 'now-section break';
+                nowTitle.textContent = currentSlot.title;
+                nowMeta.innerHTML = currentSlot.title === 'Lunch' ?
+                    'Enjoy your meal!' : 'Take a break, you deserve it!';
+                const duration = currentSlot.title === 'Lunch' ? 60 : 10;
+                initializeTimer(duration, currentSlot.start);
+                currentTask = currentSlot;
+            }
+        }
+
+        function getPriorityLabel(priority) {
+            if (priority === 5) return '🔴 High';
+            if (priority === 3) return '🟡 Medium';
+            return '⚪ Normal';
+        }
+
+        function updateStats() {
+            const taskCount = todaysTasks.length;
+            const focusSections = daySections.filter(s => s.type === 'focus' || s.type === 'admin');
+            let focusMinutes = 0;
+            for (const s of focusSections) {
+                focusMinutes += parseTime(s.end) - parseTime(s.start);
+            }
+            const focusHours = Math.round(focusMinutes / 60 * 10) / 10;
+
+            document.getElementById('statTasks').textContent = taskCount;
+            document.getElementById('statFocus').textContent = focusHours + 'h';
+            document.getElementById('statRoutines').textContent = routines.length;
+        }
+
+        // Timer functions
+        function initializeTimer(durationMinutes, slotStartMinutes) {
+            currentTaskDuration = durationMinutes;
+            const now = new Date();
+            const currentMins = getCurrentMinutes();
+            const minutesIntoSlot = currentMins - slotStartMinutes;
+            timerStartTime = new Date(now.getTime() - (minutesIntoSlot * 60000));
+            document.getElementById('timerTotal').textContent = `of ${durationMinutes} min`;
+            updateTimerRing();
+        }
+
+        function updateTimerRing() {
+            if (!timerStartTime || !currentTask) return;
+
+            const now = new Date();
+            const elapsedMs = now - timerStartTime;
+            const elapsedMinutes = elapsedMs / 60000;
+            const elapsedSeconds = Math.floor(elapsedMs / 1000);
+            const progress = elapsedMinutes / currentTaskDuration;
+            const progressCapped = Math.min(progress, 1);
+
+            const mins = Math.floor(elapsedSeconds / 60);
+            const secs = elapsedSeconds % 60;
+            document.getElementById('timerElapsed').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+            const circumference = 314;
+            const offset = circumference * (1 - progressCapped);
+            const progressRing = document.getElementById('timerProgress');
+            progressRing.style.strokeDashoffset = offset;
+
+            let phase, phaseLabel;
+            if (progress < 0.25) {
+                phase = 'starting';
+                phaseLabel = 'Getting Started';
+            } else if (progress < 0.75) {
+                phase = 'focused';
+                phaseLabel = 'Deep in it';
+            } else if (progress < 1) {
+                phase = 'finishing';
+                phaseLabel = 'Finishing up';
+            } else {
+                phase = 'overtime';
+                const overtimeMins = Math.floor(elapsedMinutes - currentTaskDuration);
+                phaseLabel = `+${overtimeMins} min over`;
+            }
+
+            const phaseEl = document.getElementById('nowPhase');
+            phaseEl.textContent = phaseLabel;
+            phaseEl.className = `now-phase phase-${phase}`;
+            progressRing.className = `timer-ring-progress phase-${phase}`;
+        }
+
+        function hideTimer() {
+            timerStartTime = null;
+            document.getElementById('timerElapsed').textContent = '--:--';
+            document.getElementById('timerTotal').textContent = '';
+            document.getElementById('nowPhase').textContent = '';
+            document.getElementById('nowPhase').className = 'now-phase';
+            document.getElementById('timerProgress').style.strokeDashoffset = 314;
+        }
+
+        // Actions
+        async function markDone() {
+            if (currentTask && currentTask.taskId) {
+                try {
+                    await fetch(`${API_URL}/ticktick/ticktick_complete_task`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            project_id: currentTask.projectId,
+                            task_id: currentTask.taskId
+                        })
+                    });
+                    regenerateSchedule();
+                } catch (e) {
+                    alert('Failed to mark task complete');
+                }
+            }
+        }
+
+        function imStuck() {
+            window.location.href = 'index.html?cmd=/stuck';
+        }
+
+        function skipTask() {
+            if (todaysTasks.length > 1) {
+                todaysTasks.push(todaysTasks.shift());
+                generateSchedule();
+            }
+        }
+
+        function takeBreak() {
+            document.getElementById('nowTaskTitle').textContent = 'Taking a Break';
+            document.getElementById('nowTaskMeta').innerHTML = 'Good choice! Come back refreshed.';
+            document.getElementById('nowPhase').textContent = 'Recharging';
+            document.getElementById('nowPhase').className = 'now-phase';
+            initializeTimer(10, getCurrentMinutes());
+        }
+
+        function regenerateSchedule() {
+            document.getElementById('scheduleContent').innerHTML = `
+                <div class="loading-schedule">
+                    <div class="spinner"></div>
+                    <p>Refreshing your schedule...</p>
+                </div>
+            `;
+            loadSchedule();
+        }
+
+        async function completeTaskFromSchedule(taskId, projectId) {
+            if (!taskId || !projectId) return;
+
+            const taskSlots = document.querySelectorAll(`[data-task-id="${taskId}"]`);
+            taskSlots.forEach(slot => {
+                slot.style.opacity = '0.5';
+                slot.style.textDecoration = 'line-through';
+            });
+
+            try {
+                const res = await fetch(`${API_URL}/ticktick/ticktick_complete_task`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        project_id: projectId,
+                        task_id: taskId
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    todaysTasks = todaysTasks.filter(t => t.id !== taskId);
+                    setTimeout(() => generateSchedule(), 500);
+                } else {
+                    taskSlots.forEach(slot => {
+                        slot.style.opacity = '1';
+                        slot.style.textDecoration = 'none';
+                    });
+                    alert('Failed to complete task');
+                }
+            } catch (e) {
+                taskSlots.forEach(slot => {
+                    slot.style.opacity = '1';
+                    slot.style.textDecoration = 'none';
+                });
+                alert('Failed to complete task: ' + e.message);
+            }
+        }
+
+        function openNewTaskModal() {
+            window.location.href = 'index.html?cmd=/add';
+        }
+
+        // View toggles
+        function showDayView() {
+            document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+            document.querySelector('.view-toggle button:first-child').classList.add('active');
+            document.getElementById('dayView').classList.add('active');
+            document.getElementById('weekView').classList.remove('active');
+        }
+
+        function showWeekView() {
+            document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+            document.querySelector('.view-toggle button:last-child').classList.add('active');
+            document.getElementById('dayView').classList.remove('active');
+            document.getElementById('weekView').classList.add('active');
+            renderWeekView();
+        }
+
+        function renderWeekView() {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const today = new Date();
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+
+            let html = '';
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startOfWeek);
+                date.setDate(startOfWeek.getDate() + i);
+                const isToday = date.toDateString() === today.toDateString();
+
+                html += `
+                    <div class="week-day ${isToday ? 'today' : ''}">
+                        <div class="week-day-header">${days[i]} ${date.getDate()}</div>
+                        ${isToday ? todaysTasks.slice(0, 4).map(t =>
+                            `<div class="week-task">${t.title}</div>`
+                        ).join('') : '<div style="color: var(--text-muted); font-size: 0.75rem; text-align: center;">No tasks</div>'}
+                    </div>
+                `;
+            }
+            document.getElementById('weekGrid').innerHTML = html;
+        }
+    </script>
+</body>
+</html>

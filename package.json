@@ -1,0 +1,48 @@
+{
+  "name": "executive-brain",
+  "version": "1.0.0",
+  "description": "ADHD-friendly task management assistant with TickTick integration",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "npx pm2 start ecosystem.config.js && npm run status",
+    "stop": "npx pm2 stop ecosystem.config.js 2>/dev/null; npx pm2 delete all 2>/dev/null; echo 'All services stopped'",
+    "restart": "npx pm2 restart ecosystem.config.js",
+    "status": "npx pm2 status",
+    "logs": "npx pm2 logs --lines 50",
+    "logs:server": "npx pm2 logs brain-server --lines 100",
+    "logs:processor": "npx pm2 logs brain-processor --lines 100",
+    "dev": "nodemon src/server.js",
+    "dev:server": "node src/server.js",
+    "dev:processor": "node src/processor.js",
+    "test": "jest tests/unit && jest tests/integration --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration --runInBand"
+  },
+  "keywords": [
+    "adhd",
+    "task-management",
+    "ticktick",
+    "productivity",
+    "executive-function"
+  ],
+  "author": "Danny Trevino",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.1",
+    "@google/generative-ai": "^0.24.1",
+    "chokidar": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "nodemon": "^3.0.1",
+    "pm2": "^6.0.14",
+    "serve": "^14.2.1",
+    "supertest": "^7.1.4"
+  }
+}

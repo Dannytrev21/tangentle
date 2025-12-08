@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Executive Brain - /focus Command
+# Fetches your priority tasks from TickTick via Claude
+
+echo "🎯 FOCUS MODE - Priority Tasks"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "Fetching from TickTick..."
+echo ""
+
+# This is a placeholder - Claude will fill in the real data
+echo "Run this command and ask Claude to 'show my focus tasks'"
+echo ""
+echo "Claude will fetch:"
+echo "• All overdue HIGH priority tasks"
+echo "• All overdue MEDIUM priority tasks"
+echo "• Today's HIGH priority tasks"
+echo "• Today's MEDIUM priority tasks"
+echo ""

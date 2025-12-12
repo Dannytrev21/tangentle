@@ -33,12 +33,12 @@ class GeminiService {
         try {
             this.client = new GoogleGenerativeAI(apiKey);
             this.model = this.client.getGenerativeModel({
-                model: 'gemini-2.5-flash',
+                model: 'gemini-2.5-flash-lite',
                 generationConfig: {
                     temperature: 0.7,
                     topP: 0.95,
                     topK: 40,
-                    maxOutputTokens: 8192,
+                    maxOutputTokens: 65536,
                 }
             });
             this.enabled = true;

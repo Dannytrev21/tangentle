@@ -682,6 +682,165 @@
             border-radius: var(--radius-sm);
         }
 
+        /* AI Action Buttons */
+        .ai-action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .ai-apply-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ai-apply-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .ai-apply-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ai-dismiss-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ai-dismiss-btn:hover {
+            background: var(--bg-hover);
+        }
+
+        /* Sync Status */
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .sync-status.syncing {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .sync-status.success {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .sync-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .sync-status .spinner-small {
+            width: 14px;
+            height: 14px;
+            border: 2px solid currentColor;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Prominent Next Action Card */
+        .ai-start-now {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .ai-start-now-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-start-now-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-start-now-message {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .ai-start-now-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            background: white;
+            color: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ai-start-now-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Rescheduled item with sync status */
+        .ai-rescheduled-item .sync-indicator {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .ai-rescheduled-item.synced {
+            opacity: 0.7;
+        }
+
+        .ai-rescheduled-item.sync-failed {
+            border-left: 2px solid #ef4444;
+        }
+
+        @keyframes pulse-highlight {
+            0%, 100% { box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.5); }
+        }
+
         /* Actions Bar */
         .schedule-actions {
             display: flex;
@@ -1005,13 +1164,17 @@
                             <button class="ai-results-close" onclick="closeAIResults()">&times;</button>
                         </div>
                         <div class="ai-results-body">
-                            <div class="ai-summary" id="aiSummary"></div>
-
-                            <div class="ai-next-action" id="aiNextAction" style="display: none;">
-                                <div class="ai-next-action-label">Start with this</div>
-                                <div class="ai-next-action-title" id="aiNextActionTitle"></div>
-                                <div class="ai-next-action-message" id="aiNextActionMessage"></div>
+                            <!-- Prominent Next Action - First! -->
+                            <div class="ai-start-now" id="aiStartNow" style="display: none;">
+                                <div class="ai-start-now-label">Start With This</div>
+                                <div class="ai-start-now-title" id="aiStartNowTitle"></div>
+                                <div class="ai-start-now-message" id="aiStartNowMessage"></div>
+                                <button class="ai-start-now-btn" onclick="focusOnNextTask()">
+                                    <span>▶</span> Start Now
+                                </button>
                             </div>
+
+                            <div class="ai-summary" id="aiSummary"></div>
 
                             <div class="ai-section" id="aiWarningsSection" style="display: none;">
                                 <div class="ai-section-title">⚠️ Heads Up</div>
@@ -1019,13 +1182,26 @@
                             </div>
 
                             <div class="ai-section" id="aiRescheduledSection" style="display: none;">
-                                <div class="ai-section-title">📅 Moved to Another Day</div>
+                                <div class="ai-section-title">📅 Will Be Moved to Another Day</div>
                                 <div id="aiRescheduled"></div>
                             </div>
 
                             <div class="ai-section" id="aiThinkingSection" style="display: none;">
                                 <div class="ai-section-title">🧠 AI Reasoning</div>
                                 <div class="ai-thinking" id="aiThinking"></div>
+                            </div>
+
+                            <!-- Sync Status -->
+                            <div class="sync-status" id="syncStatus" style="display: none;"></div>
+
+                            <!-- Action Buttons -->
+                            <div class="ai-action-buttons" id="aiActionButtons">
+                                <button class="ai-apply-btn" id="aiApplyBtn" onclick="applyAIChanges()">
+                                    <span>✓</span> Apply Changes to TickTick
+                                </button>
+                                <button class="ai-dismiss-btn" onclick="closeAIResults()">
+                                    Dismiss
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1090,6 +1266,7 @@
         let currentTaskDuration = 30;
         let currentEnergyLevel = 'medium';
         let aiSchedule = null;
+        let pendingAIChanges = null; // Store AI changes before applying
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -1098,7 +1275,16 @@
             loadDaySections();
             loadSchedule();
             updateDate();
+            restoreEnergyLevel();
         });
+
+        // Persist and restore energy level
+        function restoreEnergyLevel() {
+            const saved = localStorage.getItem('energyLevel');
+            if (saved && ['low', 'medium', 'high'].includes(saved)) {
+                setEnergyLevel(saved, false); // false = don't save again
+            }
+        }
 
         function updateTime() {
             const now = new Date();
@@ -1680,12 +1866,16 @@
         }
 
         // AI Reprioritization Functions
-        function setEnergyLevel(level) {
+        function setEnergyLevel(level, save = true) {
             currentEnergyLevel = level;
             document.querySelectorAll('.energy-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.energy-btn.${level}`).classList.add('active');
+
+            if (save) {
+                localStorage.setItem('energyLevel', level);
+            }
         }
 
         async function aiReprioritize() {
@@ -1713,6 +1903,7 @@
                 const dayOfWeek = today.getDay();
                 const dayType = (dayOfWeek === 0 || dayOfWeek === 6) ? 'weekend' : 'workday';
 
+                // Request AI optimization WITHOUT syncing to TickTick yet
                 const response = await fetch(`${API_URL}/schedule/reprioritize`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1722,7 +1913,8 @@
                         energyLevel: currentEnergyLevel,
                         dayType: dayType,
                         completedToday: [],
-                        rules: {}
+                        rules: {},
+                        syncToTickTick: false  // Don't sync yet - user will confirm
                     })
                 });
 
@@ -1730,6 +1922,7 @@
 
                 if (data.success) {
                     aiSchedule = data;
+                    pendingAIChanges = data;  // Store for later application
                     displayAIResults(data);
                 } else {
                     throw new Error(data.error || 'Failed to get AI suggestions');
@@ -1746,18 +1939,29 @@
         function displayAIResults(data) {
             const resultsPanel = document.getElementById('aiResults');
 
+            // Reset sync status and action buttons
+            document.getElementById('syncStatus').style.display = 'none';
+            document.getElementById('aiActionButtons').style.display = 'flex';
+            document.getElementById('aiApplyBtn').disabled = false;
+
+            // Prominent Next Action - Show at top!
+            const startNowEl = document.getElementById('aiStartNow');
+            if (data.nextAction && data.nextAction.title) {
+                document.getElementById('aiStartNowTitle').textContent = data.nextAction.title;
+                document.getElementById('aiStartNowMessage').textContent = data.nextAction.message || 'Get started on this first.';
+                startNowEl.style.display = 'block';
+            } else if (data.schedule && data.schedule.length > 0) {
+                // Use first scheduled task as next action
+                const first = data.schedule[0];
+                document.getElementById('aiStartNowTitle').textContent = first.title;
+                document.getElementById('aiStartNowMessage').textContent = first.reason || 'This is your top priority right now.';
+                startNowEl.style.display = 'block';
+            } else {
+                startNowEl.style.display = 'none';
+            }
+
             // Summary
             document.getElementById('aiSummary').textContent = data.summary || 'Schedule optimized for your current energy level.';
-
-            // Next Action
-            const nextActionEl = document.getElementById('aiNextAction');
-            if (data.nextAction) {
-                document.getElementById('aiNextActionTitle').textContent = data.nextAction.title;
-                document.getElementById('aiNextActionMessage').textContent = data.nextAction.message || '';
-                nextActionEl.style.display = 'block';
-            } else {
-                nextActionEl.style.display = 'none';
-            }
 
             // Warnings
             const warningsSection = document.getElementById('aiWarningsSection');
@@ -1771,14 +1975,15 @@
                 warningsSection.style.display = 'none';
             }
 
-            // Rescheduled
+            // Rescheduled - show as preview (not yet applied)
             const rescheduledSection = document.getElementById('aiRescheduledSection');
             const rescheduledEl = document.getElementById('aiRescheduled');
             if (data.rescheduled && data.rescheduled.length > 0) {
                 rescheduledEl.innerHTML = data.rescheduled.map(item =>
-                    `<div class="ai-rescheduled-item">
+                    `<div class="ai-rescheduled-item" data-task-id="${item.taskId}">
                         <span class="ai-rescheduled-task">${item.title}</span>
-                        <span class="ai-rescheduled-date">${item.newDate}</span>
+                        <span class="ai-rescheduled-date">→ ${item.newDate}</span>
+                        <span class="sync-indicator" title="Pending">⏳</span>
                     </div>`
                 ).join('');
                 rescheduledSection.style.display = 'block';
@@ -1786,7 +1991,7 @@
                 rescheduledSection.style.display = 'none';
             }
 
-            // Thinking/Reasoning
+            // Thinking/Reasoning (collapsed by default for less overwhelm)
             const thinkingSection = document.getElementById('aiThinkingSection');
             if (data.thinking) {
                 document.getElementById('aiThinking').textContent = data.thinking;
@@ -1798,7 +2003,7 @@
             // Show panel
             resultsPanel.classList.add('visible');
 
-            // Reorder tasks based on AI schedule if available
+            // Reorder local tasks based on AI schedule (preview only, not saved)
             if (data.schedule && data.schedule.length > 0) {
                 reorderTasksFromAI(data.schedule);
             }
@@ -1824,6 +2029,133 @@
 
         function closeAIResults() {
             document.getElementById('aiResults').classList.remove('visible');
+            pendingAIChanges = null;
+        }
+
+        // Apply AI changes to TickTick
+        async function applyAIChanges() {
+            if (!pendingAIChanges || !pendingAIChanges.rescheduled || pendingAIChanges.rescheduled.length === 0) {
+                // No rescheduling needed, just close
+                showSyncStatus('success', 'Schedule reordered! No tasks to move.');
+                setTimeout(() => closeAIResults(), 1500);
+                return;
+            }
+
+            const applyBtn = document.getElementById('aiApplyBtn');
+            applyBtn.disabled = true;
+            applyBtn.innerHTML = '<div class="spinner-small"></div><span>Syncing...</span>';
+
+            showSyncStatus('syncing', `Updating ${pendingAIChanges.rescheduled.length} tasks in TickTick...`);
+
+            try {
+                // Call the API with sync enabled
+                const tasksForAI = todaysTasks.map(t => ({
+                    id: t.id,
+                    title: t.title,
+                    priority: t.priority || 0,
+                    dueDate: t.dueDate || null,
+                    projectId: t.projectId,
+                    projectName: t.projectName || 'Unknown',
+                    estimatedMinutes: parseTaskMetadata(t).duration || 30
+                }));
+
+                const today = new Date();
+                const dayOfWeek = today.getDay();
+                const dayType = (dayOfWeek === 0 || dayOfWeek === 6) ? 'weekend' : 'workday';
+
+                const response = await fetch(`${API_URL}/schedule/reprioritize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tasks: tasksForAI,
+                        currentTime: new Date().toISOString(),
+                        energyLevel: currentEnergyLevel,
+                        dayType: dayType,
+                        completedToday: [],
+                        rules: {},
+                        syncToTickTick: true  // Now sync!
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.ticktickSync) {
+                    const sync = data.ticktickSync;
+
+                    // Update UI for each rescheduled item
+                    updateRescheduledItemsUI(sync.results);
+
+                    // Remove rescheduled tasks from today's view
+                    const rescheduledIds = new Set(data.rescheduled.map(t => t.taskId));
+                    todaysTasks = todaysTasks.filter(t => !rescheduledIds.has(t.id));
+
+                    if (sync.failed > 0) {
+                        showSyncStatus('error', `${sync.synced} tasks moved, ${sync.failed} failed. Check TickTick.`);
+                    } else {
+                        showSyncStatus('success', `${sync.synced} tasks moved to their new dates!`);
+                    }
+
+                    // Regenerate schedule with remaining tasks
+                    setTimeout(() => {
+                        generateSchedule();
+                    }, 500);
+
+                    // Hide action buttons after successful sync
+                    document.getElementById('aiActionButtons').style.display = 'none';
+                } else {
+                    throw new Error(data.error || 'Sync failed');
+                }
+            } catch (error) {
+                console.error('Apply changes error:', error);
+                showSyncStatus('error', 'Failed to sync: ' + error.message);
+                applyBtn.disabled = false;
+                applyBtn.innerHTML = '<span>✓</span> Apply Changes to TickTick';
+            }
+        }
+
+        function showSyncStatus(type, message) {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.className = `sync-status ${type}`;
+
+            if (type === 'syncing') {
+                statusEl.innerHTML = `<div class="spinner-small"></div><span>${message}</span>`;
+            } else if (type === 'success') {
+                statusEl.innerHTML = `<span>✓</span><span>${message}</span>`;
+            } else {
+                statusEl.innerHTML = `<span>✗</span><span>${message}</span>`;
+            }
+
+            statusEl.style.display = 'flex';
+        }
+
+        function updateRescheduledItemsUI(results) {
+            for (const result of results) {
+                const item = document.querySelector(`.ai-rescheduled-item[data-task-id="${result.taskId}"]`);
+                if (item) {
+                    const indicator = item.querySelector('.sync-indicator');
+                    if (result.success) {
+                        item.classList.add('synced');
+                        indicator.textContent = '✓';
+                        indicator.title = 'Synced';
+                    } else {
+                        item.classList.add('sync-failed');
+                        indicator.textContent = '✗';
+                        indicator.title = result.error || 'Failed';
+                    }
+                }
+            }
+        }
+
+        function focusOnNextTask() {
+            // Close the AI panel and scroll to the current task
+            closeAIResults();
+
+            // Find the current task slot and highlight it
+            const currentSlot = document.querySelector('.block-content.current');
+            if (currentSlot) {
+                currentSlot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                currentSlot.style.animation = 'pulse-highlight 1s ease 2';
+            }
         }
     </script>
 </body>

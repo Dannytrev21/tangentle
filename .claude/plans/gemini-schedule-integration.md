@@ -456,10 +456,15 @@ If issues arise:
   - [x] BONUS: Pattern detection (overload, energy mismatch, high reschedule)
   - [x] BONUS: Claude context summary (getClaudeContext())
 
-- **Phase 5: Frontend Integration** - PARTIAL
+- **Phase 5: Frontend Integration** - COMPLETE (Enhanced)
   - [x] Step 5.1: Add Reprioritize Button (schedule.html has "AI Optimize" button)
   - [x] Step 5.2: Display AI Reasoning ("AI Reasoning" panel shows thinking)
   - [x] Step 5.3: Add Loading States (loading spinner during API call)
+  - [x] Step 5.4: Two-step flow (Preview → Apply) for user control
+  - [x] Step 5.5: Prominent "Start Now" next action card at top
+  - [x] Step 5.6: Sync status indicators (syncing/success/error)
+  - [x] Step 5.7: Remove rescheduled tasks from today's view after sync
+  - [x] Step 5.8: Persist energy level in localStorage
 
 ### Remaining Work:
 - **Phase 4: TickTick Sync** - COMPLETE
@@ -481,4 +486,4 @@ If issues arise:
 ---
 
 *Last Updated: 2025-12-11*
-*Plan Version: 1.2*
+*Plan Version: 1.3*

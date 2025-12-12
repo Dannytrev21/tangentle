@@ -841,6 +841,187 @@
             50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.5); }
         }
 
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 350px;
+            animation: slideInUp 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        .toast.hiding {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .toast-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .toast-btn {
+            padding: 0.4rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .toast-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .toast-btn.primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .toast-btn.secondary {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .toast-btn.secondary:hover {
+            background: var(--bg-hover);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 1.2rem;
+            line-height: 1;
+            opacity: 0.6;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 3px solid var(--success);
+        }
+
+        .toast.info {
+            border-left: 3px solid var(--accent);
+        }
+
+        /* AI Button Badge */
+        .ai-btn {
+            position: relative;
+        }
+
+        .ai-btn-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        .ai-btn-badge.hidden {
+            display: none;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        /* Settings Toggle */
+        .settings-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 36px;
+            height: 20px;
+            background: var(--bg-input);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid var(--border-light);
+        }
+
+        .toggle-switch.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(16px);
+        }
+
         /* Actions Bar */
         .schedule-actions {
             display: flex;
@@ -1151,7 +1332,12 @@
                         <button class="ai-btn" id="aiReprioritizeBtn" onclick="aiReprioritize()">
                             <span>✨</span>
                             <span>AI Reprioritize</span>
+                            <span class="ai-btn-badge hidden" id="aiBadge"></span>
                         </button>
+                        <div class="settings-toggle" title="Auto-suggest AI optimization after completing tasks">
+                            <span>Auto-suggest</span>
+                            <div class="toggle-switch active" id="autoSuggestToggle" onclick="toggleAutoSuggest()"></div>
+                        </div>
                     </div>
 
                     <!-- AI Results Panel -->
@@ -1235,6 +1421,9 @@
 
         <!-- Overlay for mobile sidebar -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Toast Container -->
+        <div class="toast-container" id="toastContainer"></div>
     </div>
 
     <script src="shared/nav.js"></script>
@@ -1268,6 +1457,13 @@
         let aiSchedule = null;
         let pendingAIChanges = null; // Store AI changes before applying
 
+        // Event Trigger State
+        let autoSuggestEnabled = true;
+        let lastAISuggestionTime = 0;
+        let focusStartTime = null;
+        const AI_SUGGESTION_COOLDOWN = 5 * 60 * 1000; // 5 minutes
+        const FOCUS_PROTECTION_THRESHOLD = 5 * 60 * 1000; // 5 minutes into task
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             updateTime();
@@ -1276,6 +1472,7 @@
             loadSchedule();
             updateDate();
             restoreEnergyLevel();
+            restoreAutoSuggestSetting();
         });
 
         // Persist and restore energy level
@@ -1284,6 +1481,162 @@
             if (saved && ['low', 'medium', 'high'].includes(saved)) {
                 setEnergyLevel(saved, false); // false = don't save again
             }
+        }
+
+        // Auto-suggest toggle
+        function restoreAutoSuggestSetting() {
+            const saved = localStorage.getItem('autoSuggestEnabled');
+            autoSuggestEnabled = saved !== 'false'; // Default to true
+            updateAutoSuggestUI();
+        }
+
+        function toggleAutoSuggest() {
+            autoSuggestEnabled = !autoSuggestEnabled;
+            localStorage.setItem('autoSuggestEnabled', autoSuggestEnabled);
+            updateAutoSuggestUI();
+
+            // Show confirmation toast
+            showToast({
+                icon: autoSuggestEnabled ? '🔔' : '🔕',
+                title: autoSuggestEnabled ? 'Auto-suggest enabled' : 'Auto-suggest disabled',
+                message: autoSuggestEnabled
+                    ? "I'll suggest optimizations after you complete tasks"
+                    : "You can still use AI Reprioritize manually",
+                type: 'info',
+                duration: 3000
+            });
+        }
+
+        function updateAutoSuggestUI() {
+            const toggle = document.getElementById('autoSuggestToggle');
+            if (autoSuggestEnabled) {
+                toggle.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+            }
+        }
+
+        // Toast System
+        function showToast(options) {
+            const {
+                icon = '✨',
+                title,
+                message,
+                type = 'info',
+                duration = 5000,
+                actions = null,
+                onDismiss = null
+            } = options;
+
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            let actionsHTML = '';
+            if (actions) {
+                actionsHTML = `
+                    <div class="toast-actions">
+                        ${actions.map(a => `
+                            <button class="toast-btn ${a.primary ? 'primary' : 'secondary'}"
+                                    onclick="handleToastAction('${a.id}', this)">${a.label}</button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                    ${actionsHTML}
+                </div>
+                <button class="toast-close" onclick="dismissToast(this.parentElement)">&times;</button>
+            `;
+
+            container.appendChild(toast);
+
+            // Store callback for actions
+            toast._onDismiss = onDismiss;
+            toast._actions = actions;
+
+            // Auto-dismiss
+            if (duration > 0) {
+                setTimeout(() => {
+                    if (toast.parentElement) {
+                        dismissToast(toast);
+                    }
+                }, duration);
+            }
+
+            return toast;
+        }
+
+        function dismissToast(toast) {
+            toast.classList.add('hiding');
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+                if (toast._onDismiss) {
+                    toast._onDismiss();
+                }
+            }, 300);
+        }
+
+        function handleToastAction(actionId, btn) {
+            const toast = btn.closest('.toast');
+            const action = toast._actions?.find(a => a.id === actionId);
+            if (action?.callback) {
+                action.callback();
+            }
+            dismissToast(toast);
+        }
+
+        // AI Badge
+        function showAIBadge() {
+            document.getElementById('aiBadge').classList.remove('hidden');
+        }
+
+        function hideAIBadge() {
+            document.getElementById('aiBadge').classList.add('hidden');
+        }
+
+        // Focus Mode Protection
+        function isInFocusMode() {
+            if (!focusStartTime) return false;
+            const elapsed = Date.now() - focusStartTime;
+            return elapsed >= FOCUS_PROTECTION_THRESHOLD;
+        }
+
+        function startFocusTracking() {
+            focusStartTime = Date.now();
+        }
+
+        function resetFocusTracking() {
+            focusStartTime = null;
+        }
+
+        // Smart Suppression
+        function shouldSuggestAI() {
+            // Check if auto-suggest is enabled
+            if (!autoSuggestEnabled) return false;
+
+            // Check cooldown
+            const timeSinceLastSuggestion = Date.now() - lastAISuggestionTime;
+            if (timeSinceLastSuggestion < AI_SUGGESTION_COOLDOWN) return false;
+
+            // Check if in focus mode
+            if (isInFocusMode()) return false;
+
+            // Check if AI panel is already open
+            if (document.getElementById('aiResults').classList.contains('visible')) return false;
+
+            return true;
+        }
+
+        function recordAISuggestion() {
+            lastAISuggestionTime = Date.now();
         }
 
         function updateTime() {
@@ -1641,6 +1994,11 @@
                 currentTask = currentSlot;
                 const duration = currentSlot.duration || 30;
                 initializeTimer(duration, currentSlot.start);
+
+                // Start focus tracking for this task
+                if (!focusStartTime) {
+                    startFocusTracking();
+                }
             } else if (currentSlot.type === 'buffer') {
                 nowSection.className = 'now-section break';
                 nowTitle.textContent = currentSlot.title;
@@ -1736,6 +2094,7 @@
         // Actions
         async function markDone() {
             if (currentTask && currentTask.taskId) {
+                const taskTitle = currentTask.title;
                 try {
                     await fetch(`${API_URL}/ticktick/ticktick_complete_task`, {
                         method: 'POST',
@@ -1745,10 +2104,56 @@
                             task_id: currentTask.taskId
                         })
                     });
-                    regenerateSchedule();
+
+                    // Remove task from local list
+                    todaysTasks = todaysTasks.filter(t => t.id !== currentTask.taskId);
+                    resetFocusTracking();
+
+                    // Regenerate schedule immediately
+                    generateSchedule();
+
+                    // Trigger event: Task Completed
+                    onTaskCompleted(taskTitle);
+
                 } catch (e) {
                     alert('Failed to mark task complete');
                 }
+            }
+        }
+
+        // Event: Task Completed
+        function onTaskCompleted(taskTitle) {
+            // Show success toast first
+            showToast({
+                icon: '✅',
+                title: `"${taskTitle}" done!`,
+                message: 'Great work!',
+                type: 'success',
+                duration: 3000
+            });
+
+            // Check if we should suggest AI optimization
+            if (shouldSuggestAI() && todaysTasks.length > 0) {
+                recordAISuggestion();
+
+                // Delayed suggestion toast
+                setTimeout(() => {
+                    showToast({
+                        icon: '✨',
+                        title: 'Optimize your schedule?',
+                        message: `${todaysTasks.length} tasks remaining. Want AI to suggest the best order?`,
+                        type: 'info',
+                        duration: 0, // Don't auto-dismiss
+                        actions: [
+                            { id: 'optimize', label: 'Optimize', primary: true, callback: aiReprioritize },
+                            { id: 'skip', label: 'Not now', primary: false, callback: () => showAIBadge() }
+                        ],
+                        onDismiss: () => {
+                            // If dismissed without action, show badge
+                            showAIBadge();
+                        }
+                    });
+                }, 2000);
             }
         }
 
@@ -1785,6 +2190,8 @@
             if (!taskId || !projectId) return;
 
             const taskSlots = document.querySelectorAll(`[data-task-id="${taskId}"]`);
+            const taskTitle = taskSlots[0]?.querySelector('.block-title')?.textContent?.trim() || 'Task';
+
             taskSlots.forEach(slot => {
                 slot.style.opacity = '0.5';
                 slot.style.textDecoration = 'line-through';
@@ -1804,7 +2211,13 @@
 
                 if (data.success) {
                     todaysTasks = todaysTasks.filter(t => t.id !== taskId);
-                    setTimeout(() => generateSchedule(), 500);
+                    resetFocusTracking();
+
+                    setTimeout(() => {
+                        generateSchedule();
+                        // Trigger event: Task Completed
+                        onTaskCompleted(taskTitle);
+                    }, 500);
                 } else {
                     taskSlots.forEach(slot => {
                         slot.style.opacity = '1';
@@ -1881,6 +2294,12 @@
         async function aiReprioritize() {
             const btn = document.getElementById('aiReprioritizeBtn');
             const originalContent = btn.innerHTML;
+
+            // Hide badge if visible
+            hideAIBadge();
+
+            // Record that AI was used (for cooldown)
+            recordAISuggestion();
 
             // Show loading state
             btn.disabled = true;

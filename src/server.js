@@ -1087,6 +1087,7 @@ app.post('/api/ticktick/ticktick_create_subtask', async (req, res) => {
 const geminiService = require('./services/gemini');
 const { buildReprioritizePrompt, parseScheduleResponse } = require('./prompts/schedule-reprioritize');
 const aiMemory = require('./services/ai-memory');
+const ticktickSync = require('./services/ticktick-sync');
 
 // Maximum tasks to send to Gemini to prevent timeout/truncation
 const MAX_TASKS_FOR_AI = 15;
@@ -1365,10 +1366,36 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
             });
         }
 
+        // Build task lookup map for projectId
+        const taskMap = new Map();
+        for (const task of tasks) {
+            taskMap.set(task.id, task);
+        }
+
+        // Enrich rescheduled tasks with projectId from original tasks
+        const enrichedRescheduled = parsed.rescheduled.map(r => {
+            const originalTask = taskMap.get(r.taskId);
+            return {
+                ...r,
+                projectId: originalTask?.projectId || originalTask?.project_id || null
+            };
+        });
+
+        // Sync rescheduled tasks to TickTick if syncToTickTick flag is set
+        let syncResult = null;
+        if (req.body.syncToTickTick !== false && enrichedRescheduled.length > 0) {
+            console.log(`[TickTick Sync] Syncing ${enrichedRescheduled.length} rescheduled tasks...`);
+            const serverUrl = `http://localhost:${PORT}`;
+            syncResult = await ticktickSync.syncRescheduledTasks(serverUrl, enrichedRescheduled);
+            console.log(`[TickTick Sync] Complete: ${syncResult.synced} synced, ${syncResult.failed} failed`);
+        }
+
         res.json({
             success: true,
             ...parsed,
-            processingTime: elapsed
+            rescheduled: enrichedRescheduled,
+            processingTime: elapsed,
+            ticktickSync: syncResult
         });
 
     } catch (error) {

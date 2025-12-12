@@ -446,6 +446,242 @@
             font-size: 0.85rem;
         }
 
+        /* AI Controls */
+        .ai-controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.1));
+            border-bottom: 1px solid var(--border-light);
+            flex-wrap: wrap;
+        }
+
+        .energy-selector {
+            display: flex;
+            gap: 0.25rem;
+            background: var(--bg-card);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .energy-btn {
+            padding: 0.4rem 0.75rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .energy-btn:hover {
+            background: var(--bg-hover);
+        }
+
+        .energy-btn.active {
+            color: white;
+            font-weight: 500;
+        }
+
+        .energy-btn.low.active {
+            background: #ef4444;
+        }
+
+        .energy-btn.medium.active {
+            background: #f59e0b;
+        }
+
+        .energy-btn.high.active {
+            background: #10b981;
+        }
+
+        .ai-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ai-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .ai-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ai-btn .spinner-small {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* AI Results Panel */
+        .ai-results {
+            background: var(--bg-card);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--radius-md);
+            margin: 1rem 1.5rem;
+            overflow: hidden;
+            display: none;
+        }
+
+        .ai-results.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.15));
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .ai-results-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #8b5cf6;
+            font-size: 0.9rem;
+        }
+
+        .ai-results-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .ai-results-body {
+            padding: 1rem;
+        }
+
+        .ai-summary {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .ai-next-action {
+            background: var(--success-bg);
+            border-left: 3px solid var(--success);
+            padding: 0.75rem 1rem;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-bottom: 1rem;
+        }
+
+        .ai-next-action-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--success);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .ai-next-action-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .ai-next-action-message {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .ai-section {
+            margin-bottom: 1rem;
+        }
+
+        .ai-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .ai-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-warning {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            background: var(--warning-bg);
+            padding: 0.6rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-rescheduled-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .ai-rescheduled-task {
+            color: var(--text-primary);
+        }
+
+        .ai-rescheduled-date {
+            background: rgba(139, 92, 246, 0.15);
+            color: #8b5cf6;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .ai-thinking {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+        }
+
         /* Actions Bar */
         .schedule-actions {
             display: flex;
@@ -745,6 +981,55 @@
                         </div>
                     </div>
 
+                    <!-- AI Controls -->
+                    <div class="ai-controls">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Energy:</span>
+                        <div class="energy-selector">
+                            <button class="energy-btn low" onclick="setEnergyLevel('low')">Low</button>
+                            <button class="energy-btn medium active" onclick="setEnergyLevel('medium')">Medium</button>
+                            <button class="energy-btn high" onclick="setEnergyLevel('high')">High</button>
+                        </div>
+                        <button class="ai-btn" id="aiReprioritizeBtn" onclick="aiReprioritize()">
+                            <span>✨</span>
+                            <span>AI Reprioritize</span>
+                        </button>
+                    </div>
+
+                    <!-- AI Results Panel -->
+                    <div class="ai-results" id="aiResults">
+                        <div class="ai-results-header">
+                            <div class="ai-results-title">
+                                <span>✨</span>
+                                <span>AI Schedule Optimization</span>
+                            </div>
+                            <button class="ai-results-close" onclick="closeAIResults()">&times;</button>
+                        </div>
+                        <div class="ai-results-body">
+                            <div class="ai-summary" id="aiSummary"></div>
+
+                            <div class="ai-next-action" id="aiNextAction" style="display: none;">
+                                <div class="ai-next-action-label">Start with this</div>
+                                <div class="ai-next-action-title" id="aiNextActionTitle"></div>
+                                <div class="ai-next-action-message" id="aiNextActionMessage"></div>
+                            </div>
+
+                            <div class="ai-section" id="aiWarningsSection" style="display: none;">
+                                <div class="ai-section-title">⚠️ Heads Up</div>
+                                <div id="aiWarnings"></div>
+                            </div>
+
+                            <div class="ai-section" id="aiRescheduledSection" style="display: none;">
+                                <div class="ai-section-title">📅 Moved to Another Day</div>
+                                <div id="aiRescheduled"></div>
+                            </div>
+
+                            <div class="ai-section" id="aiThinkingSection" style="display: none;">
+                                <div class="ai-section-title">🧠 AI Reasoning</div>
+                                <div class="ai-thinking" id="aiThinking"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Day View -->
                     <div class="day-view active" id="dayView">
                         <div id="scheduleContent">
@@ -803,6 +1088,8 @@
         let daySections = [];
         let timerStartTime = null;
         let currentTaskDuration = 30;
+        let currentEnergyLevel = 'medium';
+        let aiSchedule = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -1390,6 +1677,153 @@
                 `;
             }
             document.getElementById('weekGrid').innerHTML = html;
+        }
+
+        // AI Reprioritization Functions
+        function setEnergyLevel(level) {
+            currentEnergyLevel = level;
+            document.querySelectorAll('.energy-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.energy-btn.${level}`).classList.add('active');
+        }
+
+        async function aiReprioritize() {
+            const btn = document.getElementById('aiReprioritizeBtn');
+            const originalContent = btn.innerHTML;
+
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner-small"></div><span>Thinking...</span>';
+
+            try {
+                // Prepare tasks for the API
+                const tasksForAI = todaysTasks.map(t => ({
+                    id: t.id,
+                    title: t.title,
+                    priority: t.priority || 0,
+                    dueDate: t.dueDate || null,
+                    projectId: t.projectId,
+                    projectName: t.projectName || 'Unknown',
+                    estimatedMinutes: parseTaskMetadata(t).duration || 30
+                }));
+
+                // Determine day type
+                const today = new Date();
+                const dayOfWeek = today.getDay();
+                const dayType = (dayOfWeek === 0 || dayOfWeek === 6) ? 'weekend' : 'workday';
+
+                const response = await fetch(`${API_URL}/schedule/reprioritize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tasks: tasksForAI,
+                        currentTime: new Date().toISOString(),
+                        energyLevel: currentEnergyLevel,
+                        dayType: dayType,
+                        completedToday: [],
+                        rules: {}
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    aiSchedule = data;
+                    displayAIResults(data);
+                } else {
+                    throw new Error(data.error || 'Failed to get AI suggestions');
+                }
+            } catch (error) {
+                console.error('AI reprioritize error:', error);
+                alert('Failed to get AI suggestions: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        }
+
+        function displayAIResults(data) {
+            const resultsPanel = document.getElementById('aiResults');
+
+            // Summary
+            document.getElementById('aiSummary').textContent = data.summary || 'Schedule optimized for your current energy level.';
+
+            // Next Action
+            const nextActionEl = document.getElementById('aiNextAction');
+            if (data.nextAction) {
+                document.getElementById('aiNextActionTitle').textContent = data.nextAction.title;
+                document.getElementById('aiNextActionMessage').textContent = data.nextAction.message || '';
+                nextActionEl.style.display = 'block';
+            } else {
+                nextActionEl.style.display = 'none';
+            }
+
+            // Warnings
+            const warningsSection = document.getElementById('aiWarningsSection');
+            const warningsEl = document.getElementById('aiWarnings');
+            if (data.warnings && data.warnings.length > 0) {
+                warningsEl.innerHTML = data.warnings.map(w =>
+                    `<div class="ai-warning">⚠️ ${w}</div>`
+                ).join('');
+                warningsSection.style.display = 'block';
+            } else {
+                warningsSection.style.display = 'none';
+            }
+
+            // Rescheduled
+            const rescheduledSection = document.getElementById('aiRescheduledSection');
+            const rescheduledEl = document.getElementById('aiRescheduled');
+            if (data.rescheduled && data.rescheduled.length > 0) {
+                rescheduledEl.innerHTML = data.rescheduled.map(item =>
+                    `<div class="ai-rescheduled-item">
+                        <span class="ai-rescheduled-task">${item.title}</span>
+                        <span class="ai-rescheduled-date">${item.newDate}</span>
+                    </div>`
+                ).join('');
+                rescheduledSection.style.display = 'block';
+            } else {
+                rescheduledSection.style.display = 'none';
+            }
+
+            // Thinking/Reasoning
+            const thinkingSection = document.getElementById('aiThinkingSection');
+            if (data.thinking) {
+                document.getElementById('aiThinking').textContent = data.thinking;
+                thinkingSection.style.display = 'block';
+            } else {
+                thinkingSection.style.display = 'none';
+            }
+
+            // Show panel
+            resultsPanel.classList.add('visible');
+
+            // Reorder tasks based on AI schedule if available
+            if (data.schedule && data.schedule.length > 0) {
+                reorderTasksFromAI(data.schedule);
+            }
+        }
+
+        function reorderTasksFromAI(aiScheduleItems) {
+            // Create a map of taskId to index for new ordering
+            const orderMap = new Map();
+            aiScheduleItems.forEach((item, index) => {
+                orderMap.set(item.taskId, index);
+            });
+
+            // Sort todaysTasks based on AI order
+            todaysTasks.sort((a, b) => {
+                const orderA = orderMap.has(a.id) ? orderMap.get(a.id) : 999;
+                const orderB = orderMap.has(b.id) ? orderMap.get(b.id) : 999;
+                return orderA - orderB;
+            });
+
+            // Re-render the schedule
+            generateSchedule();
+        }
+
+        function closeAIResults() {
+            document.getElementById('aiResults').classList.remove('visible');
         }
     </script>
 </body>

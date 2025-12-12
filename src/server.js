@@ -1086,6 +1086,93 @@ app.post('/api/ticktick/ticktick_create_subtask', async (req, res) => {
 
 const geminiService = require('./services/gemini');
 const { buildReprioritizePrompt, parseScheduleResponse } = require('./prompts/schedule-reprioritize');
+const aiMemory = require('./services/ai-memory');
+
+/**
+ * Create a fallback response when Gemini fails
+ * Uses simple priority-based sorting
+ */
+function createFallbackResponse(tasks, energyLevel) {
+    // Sort by priority (high first) then by due date
+    const sortedTasks = [...tasks].sort((a, b) => {
+        const priorityDiff = (b.priority || 0) - (a.priority || 0);
+        if (priorityDiff !== 0) return priorityDiff;
+
+        // Then by due date
+        if (a.dueDate && b.dueDate) {
+            return new Date(a.dueDate) - new Date(b.dueDate);
+        }
+        if (a.dueDate) return -1;
+        if (b.dueDate) return 1;
+        return 0;
+    });
+
+    // Create schedule based on energy level
+    const now = new Date();
+    let scheduleHour = now.getHours();
+    let scheduleMinute = Math.ceil(now.getMinutes() / 15) * 15; // Round to next 15 min
+
+    if (scheduleMinute >= 60) {
+        scheduleMinute = 0;
+        scheduleHour++;
+    }
+
+    const schedule = [];
+    const rescheduled = [];
+
+    // Limit tasks based on energy
+    const maxTasks = energyLevel === 'low' ? 2 : energyLevel === 'medium' ? 4 : 6;
+
+    for (let i = 0; i < sortedTasks.length; i++) {
+        const task = sortedTasks[i];
+
+        if (i < maxTasks && scheduleHour < 17) {
+            // Format time
+            const ampm = scheduleHour >= 12 ? 'PM' : 'AM';
+            const displayHour = scheduleHour > 12 ? scheduleHour - 12 : scheduleHour || 12;
+            const timeStr = `${displayHour}:${scheduleMinute.toString().padStart(2, '0')} ${ampm}`;
+
+            schedule.push({
+                taskId: task.id,
+                title: task.title,
+                scheduledTime: timeStr,
+                duration: task.estimatedMinutes || 30,
+                priority: task.priority >= 5 ? 'must' : task.priority >= 3 ? 'should' : 'could',
+                reason: 'Sorted by priority'
+            });
+
+            // Advance time
+            scheduleMinute += (task.estimatedMinutes || 30) + 10; // Add buffer
+            while (scheduleMinute >= 60) {
+                scheduleMinute -= 60;
+                scheduleHour++;
+            }
+        } else {
+            // Reschedule remaining tasks
+            rescheduled.push({
+                taskId: task.id,
+                title: task.title,
+                newDate: 'tomorrow',
+                reason: i >= maxTasks ? 'Too many tasks for today' : 'Past work hours'
+            });
+        }
+    }
+
+    const firstTask = schedule[0];
+
+    return {
+        thinking: 'AI response failed, using simple priority sorting as fallback.',
+        schedule,
+        rescheduled,
+        nextAction: firstTask ? {
+            taskId: firstTask.taskId,
+            title: firstTask.title,
+            message: 'Start with your highest priority task!'
+        } : null,
+        warnings: ['AI scheduling temporarily unavailable - using basic priority sort.'],
+        summary: `Sorted ${schedule.length} tasks by priority. ${rescheduled.length} moved to tomorrow.`
+    };
+}
 
 // POST /api/schedule/reprioritize - Intelligent schedule reprioritization
 app.post('/api/schedule/reprioritize', async (req, res) => {
@@ -1112,6 +1199,11 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
 
         console.log(`[Gemini] Reprioritize request: ${tasks.length} tasks, energy=${energyLevel}`);
 
+        // Update current context in AI memory
+        aiMemory.updateContext({
+            currentEnergyLevel: energyLevel
+        });
+
         // Build the prompt
         const prompt = buildReprioritizePrompt({
             tasks,
@@ -1122,17 +1214,90 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
             rules
         });
 
-        // Call Gemini
-        const response = await geminiService.generateJSON(prompt, {
-            useCache: true,
-            retries: 1
-        });
+        // Call Gemini with retry logic for JSON failures
+        let response;
+        let parsed;
+        let attempts = 0;
+        const maxAttempts = 2;
 
-        // Parse and validate response
-        const parsed = parseScheduleResponse(response, tasks);
+        while (attempts < maxAttempts) {
+            attempts++;
+            try {
+                console.log(`[Gemini] Attempt ${attempts}/${maxAttempts}`);
+                response = await geminiService.generateJSON(prompt, {
+                    useCache: attempts === 1, // Only use cache on first attempt
+                    retries: 0 // Handle retries at this level
+                });
+                parsed = parseScheduleResponse(response, tasks);
+                break; // Success, exit loop
+            } catch (attemptError) {
+                console.error(`[Gemini] Attempt ${attempts} failed:`, attemptError.message);
+
+                if (attempts >= maxAttempts) {
+                    // All attempts failed, create fallback response
+                    console.log('[Gemini] All attempts failed, using fallback response');
+                    parsed = createFallbackResponse(tasks, energyLevel);
+                }
+            }
+        }
 
         const elapsed = Date.now() - startTime;
         console.log(`[Gemini] Reprioritization complete in ${elapsed}ms`);
+
+        // Record this decision in AI memory
+        aiMemory.addDecision({
+            energyLevel,
+            taskCount: tasks.length,
+            scheduledCount: parsed.schedule.length,
+            rescheduledCount: parsed.rescheduled.length,
+            rescheduledTasks: parsed.rescheduled,
+            warnings: parsed.warnings,
+            thinking: parsed.thinking,
+            processingTime: elapsed
+        });
+
+        // Update task counts
+        aiMemory.incrementScheduled(parsed.schedule.length);
+        aiMemory.incrementRescheduled(parsed.rescheduled.length);
+
+        // Check for patterns and add them
+        if (parsed.warnings && parsed.warnings.length > 0) {
+            // Look for overload warnings
+            const overloadWarning = parsed.warnings.find(w =>
+                w.toLowerCase().includes('overload') || w.toLowerCase().includes('too many')
+            );
+            if (overloadWarning) {
+                aiMemory.addPattern({
+                    type: 'overload',
+                    description: 'Schedule overload detected',
+                    context: { taskCount: tasks.length, energyLevel }
+                });
+            }
+
+            // Look for energy mismatch
+            const energyWarning = parsed.warnings.find(w =>
+                w.toLowerCase().includes('energy') || w.toLowerCase().includes('tired')
+            );
+            if (energyWarning) {
+                aiMemory.addPattern({
+                    type: 'energy_mismatch',
+                    description: 'Energy level mismatch with tasks',
+                    context: { energyLevel, timeOfDay: new Date().getHours() }
+                });
+            }
+        }
+
+        // If many tasks were rescheduled, note this pattern
+        if (parsed.rescheduled.length >= 3) {
+            aiMemory.addPattern({
+                type: 'high_reschedule',
+                description: 'Many tasks rescheduled in single session',
+                context: {
+                    count: parsed.rescheduled.length,
+                    reasons: parsed.rescheduled.map(t => t.reason).slice(0, 3)
+                }
+            });
+        }
 
         res.json({
             success: true,
@@ -1149,6 +1314,30 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
             fallback: true
         });
     }
+});
+
+// GET /api/ai-memory - Get AI memory for Claude context
+app.get('/api/ai-memory', (req, res) => {
+    res.json({
+        success: true,
+        memory: aiMemory.getMemory()
+    });
+});
+
+// GET /api/ai-memory/claude-context - Get summarized context for Claude Opus
+app.get('/api/ai-memory/claude-context', (req, res) => {
+    res.json({
+        success: true,
+        context: aiMemory.getClaudeContext()
+    });
+});
+
+// GET /api/ai-memory/stats - Get scheduling stats
+app.get('/api/ai-memory/stats', (req, res) => {
+    res.json({
+        success: true,
+        stats: aiMemory.getStats()
+    });
 });
 
 // GET /api/schedule/reprioritize/status - Check Gemini service status

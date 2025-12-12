@@ -1,0 +1,867 @@
+{
+  "lastUpdated": "2025-12-12T01:22:18.112Z",
+  "recentDecisions": [
+    {
+      "timestamp": "2025-12-12T01:22:18.111Z",
+      "energyLevel": "medium",
+      "taskCount": 2,
+      "scheduledCount": 0,
+      "rescheduledCount": 2,
+      "rescheduledTasks": [
+        {
+          "taskId": "t1",
+          "title": "Review PR",
+          "newDate": "tomorrow",
+          "reason": "Workday over, schedule for peak focus tomorrow."
+        },
+        {
+          "taskId": "t2",
+          "title": "Write tests",
+          "newDate": "tomorrow",
+          "reason": "Workday over, schedule for peak focus tomorrow."
+        }
+      ],
+      "warnings": [],
+      "thinking": "Workday is over at 8:22 PM. Scheduling work tasks now is unrealistic and counterproductive for an ADHD brain. Both tasks will be moved to tomorrow to align with peak focus and maintain boundaries.",
+      "processingTime": 8035
+    },
+    {
+      "timestamp": "2025-12-12T01:20:35.006Z",
+      "energyLevel": "low",
+      "taskCount": 45,
+      "scheduledCount": 0,
+      "rescheduledCount": 45,
+      "rescheduledTasks": [
+        {
+          "taskId": "693351438f08ddd328cae40d",
+          "title": "Policy Bot: Schedule demo for team + Jim",
+          "newDate": "tomorrow",
+          "reason": "Past work hours"
+        },
+        {
+          "taskId": "6932293f8f08bb15cff71a2f",
+          "title": "Policy Bot: Get 2 PR approvals",
+          "newDate": "tomorrow",
+          "reason": "Past work hours"
+        },
+        {
+          "taskId": "69322e388f08f12399ffe30e",
+          "title": "Policy Bot: Merge PR to master",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e388f08bb15cff77350",
+          "title": "Policy Bot: Deploy to production AWS",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e398f08f76dd9151f1e",
+          "title": "Policy Bot: Get Jim's final sign-off",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933512f8f08de7fc9a94ec2",
+          "title": "Policy Bot: Manual test Automerge in cof-sandbox",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351318f08de7fc9a94ee4",
+          "title": "Create release management in QA for policy bot",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351338f08df3f776ee804",
+          "title": "Verify QA environment setup for Policy Bot",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351348f08ddd328cae29c",
+          "title": "Create release management happy path test",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351368f08ddd328cae2d0",
+          "title": "Verify Policy Bot posts comment correctly",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351388f08de7fc9a94f6c",
+          "title": "Screenshot and document Policy Bot test findings",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933513d8f08df3f776ee8af",
+          "title": "Policy Bot: Update codegenie-car-bridge SNS policy for PROD",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6931b92941cf983f5e6ace3f",
+          "title": "PR Review",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933513b8f08de7fc9a94fae",
+          "title": "Policy Bot: Create Production Readiness Checklist",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693874af41cf983f5e6b071d",
+          "title": "Policy Bot - Test, Release, Demo",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ccbc4645111180e5dc3f8",
+          "title": "Pay Apple Card",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693350f88f08990fb9cd0b69",
+          "title": "Standup",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692d82a848d5112030a590c2",
+          "title": "Add changes to AutoMerge Bot",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933513e8f08936232eae7f6",
+          "title": "Finish policy bot documentation ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351408f08990fb9cd113b",
+          "title": "Get metrics for policy bot ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693190598f085571d855a641",
+          "title": "Ask for help if CI/CD investigation takes too long",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6932293f8f08f12399ff7eec",
+          "title": "Policy Bot: Create New Relic dashboard",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e368f082a67293d7bef",
+          "title": "Policy Bot: Set up New Relic alerts",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693229408f08f76dd9145fbe",
+          "title": "Policy Bot: Update README with SQS architecture",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e378f085571d86790a6",
+          "title": "Policy Bot: Update testing.md",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e378f08bb15cff7733a",
+          "title": "Policy Bot: Create runbook",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6931905a8f082a67292b32e8",
+          "title": "Workaround: push directly to branch to unblock if needed",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "61e83003af600a6d95c05453",
+          "title": "Lunch",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692fa5759732110572b3a227",
+          "title": "Submit documentation for red light ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ac8f08990fb9c8fc29",
+          "title": "Evening Shutdown Begins",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ad8f08936232e2d321",
+          "title": "Evening Review",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ad8f08de7fc9a55ddb",
+          "title": "Wind Down Activity",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ad8f08ddd328c6ba95",
+          "title": "Prepare for Bed",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ae8f08936232e2d33e",
+          "title": "Lights Out",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee17641cf98541f580138",
+          "title": "Drink 12 oz of water",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee12a41cf98541f58010a",
+          "title": "Morning Routine",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee21f41cf98541f5801b9",
+          "title": "Put on Workout Clothes",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358ceb3b40510320da7b7d",
+          "title": "Make vitamin C",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358cf41c2c110320da7bf6",
+          "title": "Pack vitamins ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358eae8f16110320da7d6c",
+          "title": "Make fermented stuff ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358ebdd606d10320da7df9",
+          "title": "Prepare for workout clothes ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee24941cf98541f5801e0",
+          "title": "Plan Day",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6938926741cf983f5e6b0fa9",
+          "title": "Fix Error",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee13741cf98541f58012f",
+          "title": "Take Vyvanse",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee1c041cf98541f580180",
+          "title": "Sit by 10K light for 10 minutes",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        }
+      ],
+      "warnings": [
+        "AI scheduling temporarily unavailable - using basic priority sort."
+      ],
+      "thinking": "AI response failed, using simple priority sorting as fallback.",
+      "processingTime": 64927
+    },
+    {
+      "timestamp": "2025-12-12T01:07:22.564Z",
+      "energyLevel": "low",
+      "taskCount": 3,
+      "scheduledCount": 0,
+      "rescheduledCount": 3,
+      "rescheduledTasks": [
+        {
+          "taskId": "mem-test-1",
+          "title": "Deep work task",
+          "newDate": "tomorrow",
+          "reason": "Low energy, deep task"
+        },
+        {
+          "taskId": "mem-test-2",
+          "title": "Another deep task",
+          "newDate": "tomorrow",
+          "reason": "Low energy, deep task"
+        },
+        {
+          "taskId": "mem-test-3",
+          "title": "Third big task",
+          "newDate": "tomorrow",
+          "reason": "Low energy, medium task"
+        }
+      ],
+      "warnings": [
+        "Low energy prevents deep work today."
+      ],
+      "thinking": "Current energy is low, but all tasks are deep work. Per rules, low energy means only easy tasks. All tasks must be rescheduled for a day with higher energy.",
+      "processingTime": 5932
+    },
+    {
+      "timestamp": "2025-12-12T01:00:31.477Z",
+      "energyLevel": "high",
+      "taskCount": 1,
+      "scheduledCount": 1,
+      "rescheduledCount": 0,
+      "rescheduledTasks": [],
+      "warnings": [],
+      "thinking": "Schedule the high-priority task during peak focus window for best results.",
+      "processingTime": 5654
+    },
+    {
+      "timestamp": "2025-12-12T01:00:04.751Z",
+      "energyLevel": "medium",
+      "taskCount": 6,
+      "scheduledCount": 6,
+      "rescheduledCount": 0,
+      "rescheduledTasks": [],
+      "warnings": [],
+      "thinking": "Prioritized high/medium tasks for peak focus (9am-12pm), then scheduled remaining tasks with buffers, respecting afternoon energy dip.",
+      "processingTime": 10179
+    },
+    {
+      "timestamp": "2025-12-12T00:59:48.251Z",
+      "energyLevel": "medium",
+      "taskCount": 0,
+      "scheduledCount": 0,
+      "rescheduledCount": 0,
+      "rescheduledTasks": [],
+      "warnings": [],
+      "thinking": "No tasks provided for today. Danny has a clear evening with no work commitments.",
+      "processingTime": 1892
+    },
+    {
+      "timestamp": "2025-12-12T00:59:36.414Z",
+      "energyLevel": "high",
+      "taskCount": 1,
+      "scheduledCount": 1,
+      "rescheduledCount": 0,
+      "rescheduledTasks": [],
+      "warnings": [],
+      "thinking": "High priority task, schedule in peak focus window (9am-12pm) after Vyvanse kicks in. Current energy is high, good for deep work.",
+      "processingTime": 7197
+    },
+    {
+      "timestamp": "2025-12-12T00:59:23.837Z",
+      "energyLevel": "low",
+      "taskCount": 2,
+      "scheduledCount": 1,
+      "rescheduledCount": 1,
+      "rescheduledTasks": [
+        {
+          "taskId": "deep1",
+          "title": "Complex analysis",
+          "newDate": "tomorrow",
+          "reason": "Low energy, not suitable for deep work"
+        }
+      ],
+      "warnings": [
+        "High priority deep work moved due to low energy"
+      ],
+      "thinking": "Current low energy means only easy tasks. High priority deep work is moved to tomorrow when energy is likely higher.",
+      "processingTime": 7981
+    },
+    {
+      "timestamp": "2025-12-12T00:59:10.075Z",
+      "energyLevel": "high",
+      "taskCount": 4,
+      "scheduledCount": 4,
+      "rescheduledCount": 0,
+      "rescheduledTasks": [],
+      "warnings": [],
+      "thinking": "Prioritizing high-priority tasks during peak focus (9am-12pm) with buffers. All tasks fit well within this window.",
+      "processingTime": 8254
+    },
+    {
+      "timestamp": "2025-12-12T00:58:54.921Z",
+      "energyLevel": "medium",
+      "taskCount": 2,
+      "scheduledCount": 0,
+      "rescheduledCount": 2,
+      "rescheduledTasks": [
+        {
+          "taskId": "t1",
+          "title": "Write report",
+          "newDate": "tomorrow",
+          "reason": "Workday ended, high priority moved to morning"
+        },
+        {
+          "taskId": "t2",
+          "title": "Email replies",
+          "newDate": "tomorrow",
+          "reason": "Workday ended, medium priority moved to tomorrow"
+        }
+      ],
+      "warnings": [
+        "Workday over, all tasks rescheduled for tomorrow."
+      ],
+      "thinking": "It's 7:58 PM, past the 5 PM workday end. No work tasks can be scheduled for today. Both tasks must be moved to tomorrow.",
+      "processingTime": 11087
+    },
+    {
+      "timestamp": "2025-12-12T00:56:33.031Z",
+      "energyLevel": "low",
+      "taskCount": 5,
+      "scheduledCount": 4,
+      "rescheduledCount": 4,
+      "rescheduledTasks": [
+        {
+          "taskId": "t1",
+          "title": "Task 1",
+          "newDate": "tomorrow",
+          "reason": "High priority, but requires deep focus which is not advisable with low energy today. Move to tomorrow to tackle with fresh energy."
+        },
+        {
+          "taskId": "t2",
+          "title": "Task 2",
+          "newDate": "tomorrow",
+          "reason": "High priority, but requires deep focus which is not advisable with low energy today. Move to tomorrow to tackle with fresh energy."
+        },
+        {
+          "taskId": "t3",
+          "title": "Task 3",
+          "newDate": "tomorrow",
+          "reason": "Medium priority, but not suitable for current low energy. Reschedule for tomorrow."
+        },
+        {
+          "taskId": "t4",
+          "title": "Task 4",
+          "newDate": "tomorrow",
+          "reason": "Medium priority, but not suitable for current low energy. Reschedule for tomorrow."
+        }
+      ],
+      "warnings": [
+        "Due to low energy, most high and medium priority tasks have been rescheduled. Forcing them today would be counterproductive.",
+        "The 'Must Do Today' rule for high priority tasks has been overridden by the critical 'low energy' directive. Prioritizing your well-being today will lead to better productivity tomorrow."
+      ],
+      "thinking": "Danny's energy is low, which is the primary constraint. This means we must prioritize breaks and only schedule the easiest tasks, even if it's during the peak focus window. Most high and medium priority tasks will be rescheduled to avoid overwhelm and burnout, focusing on long-term productivity over forcing work today.",
+      "processingTime": 15031
+    },
+    {
+      "timestamp": "2025-12-12T00:56:00.731Z",
+      "energyLevel": "high",
+      "taskCount": 1,
+      "scheduledCount": 0,
+      "rescheduledCount": 1,
+      "rescheduledTasks": [
+        {
+          "taskId": "task1",
+          "title": "Complete project proposal",
+          "newDate": "tomorrow",
+          "reason": "It's 7:55 PM, past your workday end. This task requires deep focus, best done in your morning peak focus window, so scheduling it for tomorrow morning is optimal."
+        }
+      ],
+      "warnings": [
+        "No tasks could be scheduled for today as it is 7:55 PM and your workday ended at 5 PM."
+      ],
+      "thinking": "It's 7:55 PM, which is well past the end of your workday (5 PM). Therefore, no work tasks can be scheduled for today. The high-priority 'Complete project proposal' needs deep focus, which is best done during your peak focus window. Rescheduling it for tomorrow morning is the most effective approach to align with your energy and medication schedule.",
+      "processingTime": 8496
+    }
+  ],
+  "observedPatterns": [
+    {
+      "timestamp": "2025-12-12T00:56:33.035Z",
+      "type": "high_reschedule",
+      "description": "Many tasks rescheduled in single session",
+      "frequency": 3,
+      "context": {
+        "count": 4,
+        "reasons": [
+          "High priority, but requires deep focus which is not advisable with low energy today. Move to tomorrow to tackle with fresh energy.",
+          "High priority, but requires deep focus which is not advisable with low energy today. Move to tomorrow to tackle with fresh energy.",
+          "Medium priority, but not suitable for current low energy. Reschedule for tomorrow."
+        ]
+      },
+      "lastSeen": "2025-12-12T01:20:35.007Z"
+    },
+    {
+      "timestamp": "2025-12-12T00:56:33.035Z",
+      "type": "energy_mismatch",
+      "description": "Energy level mismatch with tasks",
+      "frequency": 3,
+      "context": {
+        "energyLevel": "low",
+        "timeOfDay": 19
+      },
+      "lastSeen": "2025-12-12T01:07:22.567Z"
+    }
+  ],
+  "currentContext": {
+    "todayDate": "2025-12-12",
+    "tasksScheduled": 17,
+    "tasksCompleted": 0,
+    "tasksRescheduled": 58,
+    "currentEnergyLevel": "medium",
+    "lastReprioritization": "2025-12-12T01:22:10.076Z"
+  },
+  "userPreferences": {
+    "peakFocusHours": {
+      "start": "09:00",
+      "end": "12:00"
+    },
+    "adminHours": {
+      "start": "13:00",
+      "end": "17:00"
+    },
+    "maxDailyWorkMinutes": 360,
+    "defaultBufferMinutes": 10,
+    "defaultTaskDuration": 30,
+    "medicationKickInTime": "07:00",
+    "energyDipTime": {
+      "start": "14:00",
+      "end": "16:00"
+    }
+  },
+  "schedulingStats": {
+    "totalReprioritizations": 12,
+    "tasksRescheduledAllTime": 58,
+    "averageProcessingTime": 12889,
+    "mostCommonRescheduleReason": "Workday over, schedule for peak focus tomorrow."
+  },
+  "forClaudeOpus": {
+    "summary": "Danny has used AI scheduling 11 times. Today: 17 scheduled, 0 completed, 56 rescheduled. Most common reason for rescheduling: \"Too many tasks for today\". ",
+    "recentPatterns": [
+      "Many tasks rescheduled in single session",
+      "Energy level mismatch with tasks"
+    ],
+    "actionableInsights": [
+      "Tasks are frequently being rescheduled. May indicate unrealistic planning or avoidance."
+    ],
+    "lastDecision": {
+      "timestamp": "2025-12-12T01:20:35.006Z",
+      "energyLevel": "low",
+      "taskCount": 45,
+      "scheduledCount": 0,
+      "rescheduledCount": 45,
+      "rescheduledTasks": [
+        {
+          "taskId": "693351438f08ddd328cae40d",
+          "title": "Policy Bot: Schedule demo for team + Jim",
+          "newDate": "tomorrow",
+          "reason": "Past work hours"
+        },
+        {
+          "taskId": "6932293f8f08bb15cff71a2f",
+          "title": "Policy Bot: Get 2 PR approvals",
+          "newDate": "tomorrow",
+          "reason": "Past work hours"
+        },
+        {
+          "taskId": "69322e388f08f12399ffe30e",
+          "title": "Policy Bot: Merge PR to master",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e388f08bb15cff77350",
+          "title": "Policy Bot: Deploy to production AWS",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e398f08f76dd9151f1e",
+          "title": "Policy Bot: Get Jim's final sign-off",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933512f8f08de7fc9a94ec2",
+          "title": "Policy Bot: Manual test Automerge in cof-sandbox",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351318f08de7fc9a94ee4",
+          "title": "Create release management in QA for policy bot",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351338f08df3f776ee804",
+          "title": "Verify QA environment setup for Policy Bot",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351348f08ddd328cae29c",
+          "title": "Create release management happy path test",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351368f08ddd328cae2d0",
+          "title": "Verify Policy Bot posts comment correctly",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351388f08de7fc9a94f6c",
+          "title": "Screenshot and document Policy Bot test findings",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933513d8f08df3f776ee8af",
+          "title": "Policy Bot: Update codegenie-car-bridge SNS policy for PROD",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6931b92941cf983f5e6ace3f",
+          "title": "PR Review",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933513b8f08de7fc9a94fae",
+          "title": "Policy Bot: Create Production Readiness Checklist",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693874af41cf983f5e6b071d",
+          "title": "Policy Bot - Test, Release, Demo",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ccbc4645111180e5dc3f8",
+          "title": "Pay Apple Card",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693350f88f08990fb9cd0b69",
+          "title": "Standup",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692d82a848d5112030a590c2",
+          "title": "Add changes to AutoMerge Bot",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6933513e8f08936232eae7f6",
+          "title": "Finish policy bot documentation ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693351408f08990fb9cd113b",
+          "title": "Get metrics for policy bot ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693190598f085571d855a641",
+          "title": "Ask for help if CI/CD investigation takes too long",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6932293f8f08f12399ff7eec",
+          "title": "Policy Bot: Create New Relic dashboard",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e368f082a67293d7bef",
+          "title": "Policy Bot: Set up New Relic alerts",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693229408f08f76dd9145fbe",
+          "title": "Policy Bot: Update README with SQS architecture",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e378f085571d86790a6",
+          "title": "Policy Bot: Update testing.md",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69322e378f08bb15cff7733a",
+          "title": "Policy Bot: Create runbook",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6931905a8f082a67292b32e8",
+          "title": "Workaround: push directly to branch to unblock if needed",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "61e83003af600a6d95c05453",
+          "title": "Lunch",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692fa5759732110572b3a227",
+          "title": "Submit documentation for red light ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ac8f08990fb9c8fc29",
+          "title": "Evening Shutdown Begins",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ad8f08936232e2d321",
+          "title": "Evening Review",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ad8f08de7fc9a55ddb",
+          "title": "Wind Down Activity",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ad8f08ddd328c6ba95",
+          "title": "Prepare for Bed",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "693326ae8f08936232e2d33e",
+          "title": "Lights Out",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee17641cf98541f580138",
+          "title": "Drink 12 oz of water",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee12a41cf98541f58010a",
+          "title": "Morning Routine",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee21f41cf98541f5801b9",
+          "title": "Put on Workout Clothes",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358ceb3b40510320da7b7d",
+          "title": "Make vitamin C",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358cf41c2c110320da7bf6",
+          "title": "Pack vitamins ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358eae8f16110320da7d6c",
+          "title": "Make fermented stuff ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "69358ebdd606d10320da7df9",
+          "title": "Prepare for workout clothes ",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee24941cf98541f5801e0",
+          "title": "Plan Day",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "6938926741cf983f5e6b0fa9",
+          "title": "Fix Error",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee13741cf98541f58012f",
+          "title": "Take Vyvanse",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        },
+        {
+          "taskId": "692ee1c041cf98541f580180",
+          "title": "Sit by 10K light for 10 minutes",
+          "newDate": "tomorrow",
+          "reason": "Too many tasks for today"
+        }
+      ],
+      "warnings": [
+        "AI scheduling temporarily unavailable - using basic priority sort."
+      ],
+      "thinking": "AI response failed, using simple priority sorting as fallback.",
+      "processingTime": 64927
+    },
+    "currentContext": {
+      "todayDate": "2025-12-12",
+      "tasksScheduled": 17,
+      "tasksCompleted": 0,
+      "tasksRescheduled": 56,
+      "currentEnergyLevel": "high",
+      "lastReprioritization": "2025-12-12T01:21:53.725Z"
+    }
+  }
+}

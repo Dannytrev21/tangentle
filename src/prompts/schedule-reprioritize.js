@@ -130,70 +130,87 @@ Create an optimized schedule for the remaining day. Think step by step:
 5. **Reschedule:** What needs to move to another day?
 
 ## OUTPUT FORMAT
-Respond with valid JSON only (no markdown code blocks):
+CRITICAL: You MUST respond with valid, complete JSON only. No markdown, no code blocks, no explanation text.
+Keep responses concise - use short reasons (under 50 chars each).
+
 {
-    "thinking": "Your step-by-step reasoning (2-3 sentences)",
+    "thinking": "Brief reasoning (1-2 sentences max)",
     "schedule": [
-        {
-            "taskId": "string (from task list)",
-            "title": "string",
-            "scheduledTime": "HH:MM AM/PM",
-            "duration": number (minutes),
-            "priority": "must|should|could",
-            "reason": "Brief reason for this slot"
-        }
+        {"taskId": "id", "title": "name", "scheduledTime": "HH:MM AM/PM", "duration": 30, "priority": "must", "reason": "short reason"}
     ],
     "rescheduled": [
-        {
-            "taskId": "string",
-            "title": "string",
-            "newDate": "tomorrow|monday|weekend|someday",
-            "reason": "Why it's being moved"
-        }
+        {"taskId": "id", "title": "name", "newDate": "tomorrow", "reason": "short reason"}
     ],
-    "nextAction": {
-        "taskId": "string",
-        "title": "string",
-        "message": "Encouraging message about starting this task"
-    },
-    "warnings": ["Any concerns about the schedule"],
-    "summary": "One friendly sentence summary for Danny"
-}`;
+    "nextAction": {"taskId": "id", "title": "name", "message": "Short encouraging message"},
+    "warnings": ["Short warning if any"],
+    "summary": "One short friendly sentence"
+}
+
+IMPORTANT RULES:
+- Keep ALL string values SHORT (under 100 characters)
+- Include ONLY tasks from the input list (use exact taskId values)
+- schedule array: tasks to do today
+- rescheduled array: tasks moved to another day
+- If no tasks to schedule, use empty array: []
+- If no tasks to reschedule, use empty array: []
+- ALWAYS include summary field
+- MUST be valid JSON that can be parsed`;
 }
 
 /**
  * Parse and validate Gemini's response
  */
 function parseScheduleResponse(response, inputTasks) {
-    // Validate required fields
-    const required = ['schedule', 'summary'];
-    for (const field of required) {
-        if (!(field in response)) {
-            throw new Error(`Missing required field: ${field}`);
-        }
+    // Validate required fields - be lenient and provide defaults
+    if (!response.summary) {
+        response.summary = 'Schedule optimized based on current energy and priorities.';
     }
 
-    // Validate schedule entries
+    // Ensure schedule is an array
     if (!Array.isArray(response.schedule)) {
-        throw new Error('Schedule must be an array');
+        response.schedule = [];
     }
 
-    // Validate task IDs exist in input
-    const validTaskIds = new Set(inputTasks.map(t => t.id));
+    // Normalize schedule entries - handle variations in field naming
+    const normalizedSchedule = response.schedule.map(item => {
+        // Handle potential field name variations from Gemini
+        const taskId = item.taskId || item.task_id || item.id || '';
+        const title = item.title || item.name || item.taskTitle || '';
+        const scheduledTime = item.scheduledTime || item.scheduled_time || item.time || item.startTime || '';
 
-    for (const item of response.schedule) {
-        if (!item.taskId || !item.title || !item.scheduledTime) {
-            throw new Error('Schedule item missing required fields');
-        }
-        // Allow taskId validation to be lenient - Gemini might generate IDs slightly differently
+        return {
+            taskId,
+            title,
+            scheduledTime,
+            duration: item.duration || 30,
+            priority: item.priority || 'should',
+            reason: item.reason || ''
+        };
+    }).filter(item => item.taskId && item.title); // Only keep valid entries
+
+    // Normalize rescheduled entries
+    const normalizedRescheduled = (response.rescheduled || []).map(item => ({
+        taskId: item.taskId || item.task_id || item.id || '',
+        title: item.title || item.name || '',
+        newDate: item.newDate || item.new_date || item.date || 'tomorrow',
+        reason: item.reason || ''
+    })).filter(item => item.title); // Only keep valid entries
+
+    // Normalize nextAction
+    let nextAction = response.nextAction || response.next_action || null;
+    if (nextAction) {
+        nextAction = {
+            taskId: nextAction.taskId || nextAction.task_id || '',
+            title: nextAction.title || nextAction.name || '',
+            message: nextAction.message || 'Start with this one!'
+        };
     }
 
-    // Add defaults for optional fields
     return {
-        thinking: response.thinking || '',
-        schedule: response.schedule,
-        rescheduled: response.rescheduled || [],
-        nextAction: response.nextAction || null,
+        thinking: response.thinking || response.reasoning || '',
+        schedule: normalizedSchedule,
+        rescheduled: normalizedRescheduled,
+        nextAction,
         warnings: response.warnings || [],
         summary: response.summary
     };

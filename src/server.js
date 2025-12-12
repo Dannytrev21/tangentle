@@ -1080,6 +1080,85 @@ app.post('/api/ticktick/ticktick_create_subtask', async (req, res) => {
     }
 });
 
+// ============================================================
+// GEMINI AI SCHEDULE REPRIORITIZATION
+// ============================================================
+
+const geminiService = require('./services/gemini');
+const { buildReprioritizePrompt, parseScheduleResponse } = require('./prompts/schedule-reprioritize');
+
+// POST /api/schedule/reprioritize - Intelligent schedule reprioritization
+app.post('/api/schedule/reprioritize', async (req, res) => {
+    const startTime = Date.now();
+
+    // Check if Gemini is enabled
+    if (!geminiService.isEnabled()) {
+        return res.status(503).json({
+            success: false,
+            error: 'Gemini AI service not configured. Add GEMINI_API_KEY to .env file.',
+            fallback: true
+        });
+    }
+
+    try {
+        const {
+            tasks = [],
+            currentTime = new Date().toISOString(),
+            energyLevel = 'medium',
+            dayType = 'workday',
+            completedToday = [],
+            rules = {}
+        } = req.body;
+
+        console.log(`[Gemini] Reprioritize request: ${tasks.length} tasks, energy=${energyLevel}`);
+
+        // Build the prompt
+        const prompt = buildReprioritizePrompt({
+            tasks,
+            currentTime,
+            energyLevel,
+            dayType,
+            completedToday,
+            rules
+        });
+
+        // Call Gemini
+        const response = await geminiService.generateJSON(prompt, {
+            useCache: true,
+            retries: 1
+        });
+
+        // Parse and validate response
+        const parsed = parseScheduleResponse(response, tasks);
+
+        const elapsed = Date.now() - startTime;
+        console.log(`[Gemini] Reprioritization complete in ${elapsed}ms`);
+
+        res.json({
+            success: true,
+            ...parsed,
+            processingTime: elapsed
+        });
+
+    } catch (error) {
+        console.error('[Gemini] Reprioritization error:', error.message);
+
+        res.status(500).json({
+            success: false,
+            error: error.message,
+            fallback: true
+        });
+    }
+});
+
+// GET /api/schedule/reprioritize/status - Check Gemini service status
+app.get('/api/schedule/reprioritize/status', (req, res) => {
+    res.json({
+        enabled: geminiService.isEnabled(),
+        model: 'gemini-2.5-flash'
+    });
+});
+
 // Watch for response file changes (when Claude writes directly via respond.js)
 let lastResponseCheck = {};
 const responseWatcher = chokidar.watch(RESPONSE_FILE, {

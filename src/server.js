@@ -1088,6 +1088,62 @@ const geminiService = require('./services/gemini');
 const { buildReprioritizePrompt, parseScheduleResponse } = require('./prompts/schedule-reprioritize');
 const aiMemory = require('./services/ai-memory');
 
+// Maximum tasks to send to Gemini to prevent timeout/truncation
+const MAX_TASKS_FOR_AI = 15;
+
+/**
+ * Prioritize and limit tasks for AI processing
+ * Returns { tasksForAI, autoRescheduled }
+ */
+function prioritizeTasksForAI(tasks, maxTasks = MAX_TASKS_FOR_AI) {
+    if (tasks.length <= maxTasks) {
+        return { tasksForAI: tasks, autoRescheduled: [] };
+    }
+
+    console.log(`[Gemini] Limiting ${tasks.length} tasks to ${maxTasks} for AI processing`);
+
+    // Sort by priority score
+    const scored = tasks.map(task => {
+        let score = 0;
+
+        // High priority = highest score
+        score += (task.priority || 0) * 20;
+
+        // Due today = very high
+        const today = new Date().toISOString().split('T')[0];
+        if (task.dueDate) {
+            const dueDate = task.dueDate.split('T')[0];
+            if (dueDate === today) {
+                score += 100;
+            } else if (dueDate < today) {
+                score += 150; // Overdue
+            }
+        }
+
+        return { ...task, _score: score };
+    });
+
+    // Sort by score descending
+    scored.sort((a, b) => b._score - a._score);
+
+    // Take top tasks for AI, auto-reschedule the rest
+    const tasksForAI = scored.slice(0, maxTasks).map(t => {
+        const { _score, ...task } = t;
+        return task;
+    });
+
+    const autoRescheduled = scored.slice(maxTasks).map(t => ({
+        taskId: t.id,
+        title: t.title,
+        newDate: 'tomorrow',
+        reason: 'Auto-rescheduled (lower priority)'
+    }));
+
+    console.log(`[Gemini] ${tasksForAI.length} tasks for AI, ${autoRescheduled.length} auto-rescheduled`);
+
+    return { tasksForAI, autoRescheduled };
+}
+
 /**
  * Create a fallback response when Gemini fails
  * Uses simple priority-based sorting
@@ -1204,9 +1260,12 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
             currentEnergyLevel: energyLevel
         });
 
-        // Build the prompt
+        // Limit tasks to prevent Gemini timeout/truncation
+        const { tasksForAI, autoRescheduled } = prioritizeTasksForAI(tasks);
+
+        // Build the prompt with limited tasks
         const prompt = buildReprioritizePrompt({
-            tasks,
+            tasks: tasksForAI,
             currentTime,
             energyLevel,
             dayType,
@@ -1228,7 +1287,7 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
                     useCache: attempts === 1, // Only use cache on first attempt
                     retries: 0 // Handle retries at this level
                 });
-                parsed = parseScheduleResponse(response, tasks);
+                parsed = parseScheduleResponse(response, tasksForAI);
                 break; // Success, exit loop
             } catch (attemptError) {
                 console.error(`[Gemini] Attempt ${attempts} failed:`, attemptError.message);
@@ -1236,9 +1295,16 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
                 if (attempts >= maxAttempts) {
                     // All attempts failed, create fallback response
                     console.log('[Gemini] All attempts failed, using fallback response');
-                    parsed = createFallbackResponse(tasks, energyLevel);
+                    parsed = createFallbackResponse(tasksForAI, energyLevel);
                 }
             }
+        }
+
+        // Merge auto-rescheduled tasks with AI-rescheduled tasks
+        if (autoRescheduled.length > 0) {
+            parsed.rescheduled = [...parsed.rescheduled, ...autoRescheduled];
+            if (!parsed.warnings) parsed.warnings = [];
+            parsed.warnings.push(`${autoRescheduled.length} lower-priority tasks auto-rescheduled to tomorrow.`);
         }
 
         const elapsed = Date.now() - startTime;

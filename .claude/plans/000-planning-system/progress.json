@@ -1,0 +1,54 @@
+{
+  "planId": "000",
+  "name": "planning-system",
+  "title": "Automated Planning System",
+  "description": "Meta-plan documenting the planning system itself",
+  "createdAt": "2025-12-12T09:30:00Z",
+  "updatedAt": "2025-12-12T09:30:00Z",
+  "status": "completed",
+  "currentStep": 1,
+  "totalSteps": 1,
+  "steps": [
+    {
+      "id": 1,
+      "name": "system-implementation",
+      "title": "Implement Planning System",
+      "status": "completed",
+      "promptGenerated": true,
+      "startedAt": "2025-12-12T09:00:00Z",
+      "completedAt": "2025-12-12T09:30:00Z",
+      "verificationPassed": true,
+      "attempts": 1,
+      "notes": "All commands created and documented"
+    }
+  ],
+  "context": {
+    "filesCreated": [
+      ".claude/commands/plan-feature.md",
+      ".claude/commands/plan-prompts.md",
+      ".claude/commands/plan-next.md",
+      ".claude/commands/plan-status.md",
+      ".claude/commands/plan-verify.md",
+      ".claude/commands/plan-rollback.md",
+      ".claude/plans/000-planning-system/plan.md",
+      ".claude/plans/000-planning-system/adr.md",
+      ".claude/plans/000-planning-system/progress.json",
+      ".claude/plans/000-planning-system/context.md"
+    ],
+    "filesModified": [
+      "CLAUDE.md"
+    ],
+    "keyDecisions": [
+      "Use numbered directories with slug names",
+      "JSON for machine state, Markdown for human context",
+      "Structured prompt template with 10 sections",
+      "2 retry attempts before marking blocked"
+    ],
+    "blockers": [],
+    "learnings": [
+      "Tree of Thought analysis essential for major decisions",
+      "Context preservation enables cold-start resumption",
+      "Self-correction reduces manual intervention needs"
+    ]
+  }
+}

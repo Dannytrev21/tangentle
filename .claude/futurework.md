@@ -57,6 +57,18 @@ breaks.
 
 settings page.
 
+  The AI reprioritize should be more intelligent. It should take into account the type of task such as 
+  
+  
+  There should be a settings page that stores and updates my current settings. Such as when weekends are, routines, periods, etc. Think of all the settings that should be added and how to implement it. Do not brute force it, use Tree of thought for each issue to consider many ideas with many hypothesis before picking the best one. Then come up with detailed step by step plan for an AI agent to implement it. Each step should have an context, the high level steps, acceptance criteria, testing to get feedback that it's implemented, and documentation update. Write it in `.claude/plans/...`. I will run each step in the future. 
+  
+  Also for each step in `.claude/settings-page-implementation.md  give me a prompt to give AI so that it creates the best code for that step. Think of best prompting strategies especially for agent AI and how to correct itself if it makes a mistake in either the plan or the implementatin. Provide it all the context it needs to run or add a file path so that it knows where to look. My goal is to have to have the best prompt for the AI for each step in a particular plan, so plans are created in `.claude/{plan_name}.md` and the prompts are stored in `.claude/plans/{plan_name}-prompts.md`. Do not brute force it, use Tree of thought for each issue to consider many ideas with many hypothesis before picking the best one. If you need to update the `CLAUDE.md` as well do so or create commands that automate this.  
+  
+  Ok design a automatic plan implementation process. The idea is that a claude command like /plan-feature (followed by the plan) will create a
+  directory in `.claude/plans/{incrementing number}/...` where all the plan documents will live there and it will also create the plan document, a checklist/AI tasks for an AI agent to complete one at a time.  Each step/task should have an context, the high level steps, acceptance criteria, testing to get feedback that it's implemented, and documentation update. It should also create a design doc/ADR that explains the decision to do everything at a high level. Then another claude command /plan-prompts {plan number} will create a series of prompts for each step to give AI so that it creates the best code for that step. Think of best prompting strategies especially for agent AI and how to correct itself if it makes a mistake in either the plan or the implementatin. Provide it all the context it needs to run or add a file path so that it knows where to look. My goal is to have to have the best prompt for the AI for each step in a particular plan. Then another command /plan-next {plan number} or script {plan number} (which ever is better) looks at the next available step and prompt step and automatically starts working on it. It also checks things off the plan and the prompts so it knows where it last left off and where the next step it. It updates everything and adds context so that I can start from a fresh terminal or after compacting with no reduction in code quality. Do not brute force it, use Tree of thought for each issue to consider many ideas with many hypothesis before picking the best one. If you need to update the `CLAUDE.md` as well do so or create commands that automate this. The idea is to produce the best quality code, it doesn't matter if this process takes longer so long as it creates really high quality code and can self correct. 
+  
+
+
 
 
 
@@ -318,3 +330,22 @@ phases, and more high level on the last few, we will flesh it out as we go along
   Ready to begin Phase 1? I'll need you to:
   1. Get a Gemini API key from https://aistudio.google.com/apikey
   2. Tell me when you're ready to start
+  
+  
+  I get the following error message when I do the AI reprioritize. Help me figure out the problem and how to solve it.  Do not brute force it, use Tree of thought to consider many ideas and figuring out the problem with many hypothesis before picking the best one. Then think of how to solve it using Tree of thought to consider many ideas before picking the best one. Then come up with a plan to implement it, and begin implementing it. Also ensure that is the problem by testing it and getting feedback and that the problem is fixed by testing it. 
+  Error message: `⚠️ AI scheduling temporarily unavailable - using basic priority sort.`
+  
+  
+  > I get the following error message when I do the AI reprioritize. Help me figure out the problem and how to solve it.  Do not brute force it, use Tree of thought to consider many ideas and 
+figuring out the problem with many hypothesis before picking the best one. Then think of how to solve it using Tree of thought to consider many ideas before picking the best one. Then come up with 
+a plan to implement it, and begin implementing it. Also ensure that is the problem by testing it and getting feedback and that the problem is fixed by testing it. 
+  Error message: `⚠️ AI scheduling temporarily unavailable - using basic priority sort.` 
+  
+  
+  
+  
+  /Users/dannytrevino/development/executive-brain/.windsurf/plans/001-planning-system-adaptation
+  
+  
+
+

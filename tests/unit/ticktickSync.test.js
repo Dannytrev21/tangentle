@@ -1,8 +1,10 @@
 const {
     convertRelativeDate,
     formatDate,
+    parseDurationFromContent,
     buildUpdatePayload,
-    prepareRescheduleUpdates
+    prepareRescheduleUpdates,
+    DEFAULT_DURATION_MINUTES
 } = require('../../src/services/ticktick-sync');
 
 describe('TickTick Sync Service', () => {
@@ -60,6 +62,25 @@ describe('TickTick Sync Service', () => {
         });
     });
 
+    describe('parseDurationFromContent', () => {
+        it('should parse duration from content', () => {
+            expect(parseDurationFromContent('duration:30')).toBe(30);
+            expect(parseDurationFromContent('duration:15\nSome description')).toBe(15);
+            expect(parseDurationFromContent('Task info\nduration:45')).toBe(45);
+        });
+
+        it('should return default duration when no duration found', () => {
+            expect(parseDurationFromContent('')).toBe(DEFAULT_DURATION_MINUTES);
+            expect(parseDurationFromContent(null)).toBe(DEFAULT_DURATION_MINUTES);
+            expect(parseDurationFromContent('No duration here')).toBe(DEFAULT_DURATION_MINUTES);
+        });
+
+        it('should be case insensitive', () => {
+            expect(parseDurationFromContent('DURATION:60')).toBe(60);
+            expect(parseDurationFromContent('Duration:20')).toBe(20);
+        });
+    });
+
     describe('buildUpdatePayload', () => {
         it('should build correct payload with taskId and projectId', () => {
             const task = { taskId: 'task123', projectId: 'proj456' };
@@ -67,7 +88,7 @@ describe('TickTick Sync Service', () => {
 
             expect(payload.task_id).toBe('task123');
             expect(payload.project_id).toBe('proj456');
-            expect(payload.due_date).toBe('2025-12-15T12:00:00.000+0000');
+            expect(payload.timeZone).toBe('America/New_York');
         });
 
         it('should use id if taskId not present', () => {
@@ -75,6 +96,59 @@ describe('TickTick Sync Service', () => {
             const payload = buildUpdatePayload(task, '2025-12-15');
 
             expect(payload.task_id).toBe('task789');
+        });
+
+        it('should include timeZone field', () => {
+            const task = { taskId: 'task123', projectId: 'proj456' };
+            const payload = buildUpdatePayload(task, '2025-12-15');
+
+            expect(payload.timeZone).toBe('America/New_York');
+        });
+
+        it('should set start_date to 9 AM EST (14:00 UTC)', () => {
+            const task = { taskId: 'task123', projectId: 'proj456' };
+            const payload = buildUpdatePayload(task, '2025-12-15');
+
+            // Start should be 9 AM EST = 14:00 UTC
+            expect(payload.start_date).toBe('2025-12-15T14:00:00.000+0000');
+        });
+
+        it('should set due_date based on duration (default 30 min)', () => {
+            const task = { taskId: 'task123', projectId: 'proj456' };
+            const payload = buildUpdatePayload(task, '2025-12-15');
+
+            // Due should be 9 AM + 30 min = 9:30 AM EST = 14:30 UTC
+            expect(payload.due_date).toBe('2025-12-15T14:30:00.000+0000');
+        });
+
+        it('should respect duration from task content', () => {
+            const task = { taskId: 'task123', projectId: 'proj456', content: 'duration:15' };
+            const payload = buildUpdatePayload(task, '2025-12-15');
+
+            // Start at 9 AM EST = 14:00 UTC
+            expect(payload.start_date).toBe('2025-12-15T14:00:00.000+0000');
+            // Due at 9:15 AM EST = 14:15 UTC
+            expect(payload.due_date).toBe('2025-12-15T14:15:00.000+0000');
+        });
+
+        it('should handle 60 minute duration', () => {
+            const task = { taskId: 'task123', projectId: 'proj456', content: 'duration:60' };
+            const payload = buildUpdatePayload(task, '2025-12-15');
+
+            // Start at 9 AM EST = 14:00 UTC
+            expect(payload.start_date).toBe('2025-12-15T14:00:00.000+0000');
+            // Due at 10 AM EST = 15:00 UTC
+            expect(payload.due_date).toBe('2025-12-15T15:00:00.000+0000');
+        });
+
+        it('should handle 5 minute duration', () => {
+            const task = { taskId: 'task123', projectId: 'proj456', content: 'duration:5\nQuick task' };
+            const payload = buildUpdatePayload(task, '2025-12-15');
+
+            // Start at 9 AM EST = 14:00 UTC
+            expect(payload.start_date).toBe('2025-12-15T14:00:00.000+0000');
+            // Due at 9:05 AM EST = 14:05 UTC
+            expect(payload.due_date).toBe('2025-12-15T14:05:00.000+0000');
         });
     });
 

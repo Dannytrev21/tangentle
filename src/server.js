@@ -1003,7 +1003,7 @@ app.post('/api/ticktick/ticktick_create_task', async (req, res) => {
 // Update task
 app.post('/api/ticktick/ticktick_update_task', async (req, res) => {
     try {
-        const { task_id, project_id, title, content, start_date, due_date, priority } = req.body;
+        const { task_id, project_id, title, content, start_date, due_date, priority, timeZone } = req.body;
 
         const taskData = { id: task_id, projectId: project_id };
         if (title) taskData.title = title;
@@ -1011,6 +1011,8 @@ app.post('/api/ticktick/ticktick_update_task', async (req, res) => {
         if (priority !== undefined) taskData.priority = priority;
         if (start_date) taskData.startDate = start_date;
         if (due_date) taskData.dueDate = due_date;
+        // Include timezone for proper date interpretation
+        if (timeZone) taskData.timeZone = timeZone;
 
         const result = await tickTickRequest(`/task/${task_id}`, 'POST', taskData);
         res.json({ success: true, result });
@@ -1372,12 +1374,14 @@ app.post('/api/schedule/reprioritize', async (req, res) => {
             taskMap.set(task.id, task);
         }
 
-        // Enrich rescheduled tasks with projectId from original tasks
+        // Enrich rescheduled tasks with projectId and content from original tasks
         const enrichedRescheduled = parsed.rescheduled.map(r => {
             const originalTask = taskMap.get(r.taskId);
             return {
                 ...r,
-                projectId: originalTask?.projectId || originalTask?.project_id || null
+                projectId: originalTask?.projectId || originalTask?.project_id || null,
+                // Include content for duration parsing
+                content: originalTask?.content || null
             };
         });
 

@@ -1,0 +1,109 @@
+{
+  "planId": "001",
+  "name": "planning-system-adaptation",
+  "title": "Planning System Adaptation for Windsurf",
+  "description": "Port the automated planning system from Claude Code to Windsurf IDE",
+  "createdAt": "2025-12-12T00:00:00.000Z",
+  "updatedAt": "2025-12-12T00:00:00.000Z",
+  "status": "not_started",
+  "currentStep": 0,
+  "totalSteps": 7,
+  "steps": [
+    {
+      "id": 1,
+      "name": "directory-structure",
+      "title": "Create Directory Structure",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    },
+    {
+      "id": 2,
+      "name": "core-rules",
+      "title": "Create Planning System Rules",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    },
+    {
+      "id": 3,
+      "name": "plan-feature-workflow",
+      "title": "Create Plan-Feature Workflow",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "name": "plan-prompts-workflow",
+      "title": "Create Plan-Prompts Workflow",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    },
+    {
+      "id": 5,
+      "name": "plan-next-workflow",
+      "title": "Create Plan-Next Workflow",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    },
+    {
+      "id": 6,
+      "name": "supporting-workflows",
+      "title": "Create Supporting Workflows",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    },
+    {
+      "id": 7,
+      "name": "documentation",
+      "title": "Create Documentation and Guide",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    }
+  ],
+  "context": {
+    "filesCreated": [],
+    "filesModified": [],
+    "keyDecisions": [
+      "Workflows for commands, rules for behavior",
+      "Glob-based activation for plan files",
+      "Plans stored in .windsurf/plans/",
+      "Templates in separate files to avoid workflow size limits"
+    ],
+    "blockers": [],
+    "learnings": []
+  }
+}

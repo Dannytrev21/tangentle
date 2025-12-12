@@ -31,6 +31,144 @@ When making changes to the Executive Brain system, **always update the documenta
 
 **When in doubt, update all four files to keep them in sync.**
 
+## Automated Planning System
+
+Executive Brain uses an automated planning system for implementing complex features with high code quality and self-correction capabilities.
+
+### Quick Start
+```
+/plan-feature Build a settings page with user preferences
+/plan-prompts 001
+/plan-next 001
+```
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `/plan-feature {description}` | Create a new implementation plan with Tree of Thought analysis |
+| `/plan-prompts {plan#}` | Generate optimized AI prompts for each step |
+| `/plan-next {plan#}` | Execute the next step, verify, and update progress |
+| `/plan-status {plan#}` | Check progress (omit # to see all plans) |
+| `/plan-verify {plan#}` | Re-run verification for current step |
+| `/plan-rollback {plan#}` | Rollback failed step changes |
+
+### Plan Directory Structure
+```
+.claude/plans/{NNN}-{feature-slug}/
+├── plan.md           # Main plan with Tree of Thought analysis
+├── adr.md            # Architecture Decision Record
+├── steps/            # Individual step specifications
+│   ├── 01-{name}.md
+│   └── ...
+├── prompts/          # AI-optimized prompts for each step
+│   ├── 01-{name}.prompt.md
+│   └── ...
+├── progress.json     # Machine-readable progress tracking
+└── context.md        # Accumulated context for session resumption
+```
+
+### Workflow
+
+#### 1. Create Plan
+`/plan-feature {description}` creates:
+- Tree of Thought analysis for all major decisions
+- Step-by-step implementation plan
+- Architecture Decision Record (ADR)
+- Progress tracking infrastructure
+
+#### 2. Generate Prompts
+`/plan-prompts {plan#}` creates optimized prompts with:
+- Complete context (no prior knowledge needed)
+- Required file reading with specific line numbers
+- Step-by-step implementation guide
+- Verification commands (copy-pasteable)
+- Self-correction procedures
+- Progress update protocol
+
+#### 3. Execute Steps
+`/plan-next {plan#}` for each step:
+- Loads context from previous sessions
+- Executes the prompt
+- Runs verification
+- Updates progress.json and context.md
+- Prepares for next step or handles failures
+
+### Progress Tracking (progress.json)
+```json
+{
+  "planId": "001",
+  "name": "settings-page",
+  "status": "in_progress",
+  "currentStep": 3,
+  "totalSteps": 9,
+  "steps": [
+    {"id": 1, "status": "completed", "verificationPassed": true},
+    {"id": 2, "status": "completed", "verificationPassed": true},
+    {"id": 3, "status": "in_progress", "attempts": 1}
+  ],
+  "context": {
+    "filesCreated": ["src/services/settings.js"],
+    "filesModified": ["src/server.js"],
+    "keyDecisions": ["JSON file storage", "REST API pattern"],
+    "learnings": ["Settings singleton pattern works well"]
+  }
+}
+```
+
+### Context Preservation (context.md)
+Maintains context across sessions/compacting:
+- What's been completed
+- Files created/modified
+- Key decisions and rationale
+- Current blockers
+- Things to remember
+
+**Resuming work**: The system reads context.md to understand state even after conversation compacting or new terminal sessions.
+
+### Self-Correction System
+
+#### Verification Layers
+1. **Syntax** - Code compiles/parses
+2. **Unit tests** - Automated tests pass
+3. **Integration** - Works with existing code
+4. **Self-review** - AI checks its own work
+
+#### On Failure
+- Identifies specific failing criteria
+- Attempts automatic fix (up to 2 times)
+- If still failing, marks step as "blocked"
+- Preserves state for manual review
+- `/plan-rollback` available if needed
+
+### Prompt Structure
+Each step prompt includes:
+```
+1. Mission          - One sentence objective
+2. Context          - Dependencies, why it matters
+3. Pre-Implementation - Files to read, prerequisites
+4. Specification    - Detailed requirements
+5. Implementation   - Step-by-step guide
+6. Acceptance       - Testable criteria
+7. Verification     - Commands to run
+8. Error Recovery   - How to fix failures
+9. Completion       - How to update progress
+10. Do NOT          - Common mistakes to avoid
+```
+
+### Quality Standards
+- Each step completable in 30-90 minutes
+- All acceptance criteria testable
+- Verification commands copy-pasteable
+- Context enables cold-start resumption
+- Tree of Thought for all major decisions
+
+### Current Plans
+Check with `/plan-status` or:
+```bash
+ls .claude/plans/
+```
+
 ## Danny's Profile
 
 - **Work hours**: 9am - 5pm (traditional)

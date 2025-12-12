@@ -1,0 +1,32 @@
+{
+  "planId": "{NNN}",
+  "name": "{feature-slug}",
+  "title": "{Feature Name}",
+  "description": "{Brief description of the feature}",
+  "createdAt": "{ISO date}",
+  "updatedAt": "{ISO date}",
+  "status": "not_started",
+  "currentStep": 0,
+  "totalSteps": 0,
+  "steps": [
+    {
+      "id": 1,
+      "name": "{step-slug}",
+      "title": "{Step Title}",
+      "status": "pending",
+      "promptGenerated": false,
+      "startedAt": null,
+      "completedAt": null,
+      "verificationPassed": null,
+      "attempts": 0,
+      "notes": ""
+    }
+  ],
+  "context": {
+    "filesCreated": [],
+    "filesModified": [],
+    "keyDecisions": [],
+    "blockers": [],
+    "learnings": []
+  }
+}
